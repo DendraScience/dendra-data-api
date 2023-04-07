@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package v3;
+
+option go_package = "github.com/dendrascience/dendra-data-api/release/go/v3";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+// An end time object for observations that span a period of time
+message EndTime {
+  // The datapoint's timestamp in UTC
+  google.protobuf.Timestamp t = 1;
+
+  // An offset in seconds between the time zone and UTC
+  sint32 o = 2;
+}
+
+// An individual time series observation in a datastream
+message Datapoint {
+  // The datapoint's timestamp in UTC
+  google.protobuf.Timestamp t = 1;
+
+  // An offset in seconds between the time zone and UTC
+  sint32 o = 2;
+
+  // RESERVED 3
+
+  // A custom data object
+  google.protobuf.Struct d = 4;
+
+  // An array of custom data objects
+  repeated google.protobuf.Struct da = 5;
+
+  // A scalar value
+  optional double v = 6;
+
+  // An array of scalar values
+  repeated double va = 7;
+
+  // The scalar value converted to a unit of measure
+  optional double uv = 8;
+
+  // RESERVED 9
+
+  // A GeoJSON point, polygon or multi-polygon
+  // TODO: Define message type for this
+  google.protobuf.Struct g = 10;
+
+  // A GeoJSON position (i.e. longitude, latitude, altitude)
+  repeated double gc = 11;
+
+  // Data quality information
+  google.protobuf.Struct q = 12;
+
+  // RESERVED 13
+  // RESERVED 14
+  // RESERVED 15
+
+  // Extended information about the time
+  google.protobuf.Struct ti = 16;
+
+  // An end time object for observations that span a period of time
+  EndTime et = 17;
+}
+
+message AnnotationActionEvaluate {
+  string evaluate = 1;
+}
+
+message DatapointsConfigInstance {
+  optional google.protobuf.Timestamp begins_at = 1;
+  optional google.protobuf.Timestamp ends_before = 2;
+
+  google.protobuf.Struct params = 3;
+
+  string connection = 4;
+  string path = 5;
+
+  // RESERVED 6
+  // RESERVED 7
+  // RESERVED 8
+  // RESERVED 9
+
+  oneof actions {
+      AnnotationActionEvaluate evaluate_action = 10;
+  }
+}
+
+// User-defined service configuration for fetching datapoints
+message DatapointsConfig {
+  repeated DatapointsConfigInstance config_instances = 1;
+}
+
+message DatapointsQuery {
+  bool sort_asc = 1;
+  optional uint32 limit = 2;
+
+  optional google.protobuf.Timestamp lt_time = 3;
+  optional google.protobuf.Timestamp gt_time = 4;
+  bool lt_equal = 5;
+  bool gt_equal = 6;
+
+  optional double lat = 7;
+  optional double lon = 8;
+}

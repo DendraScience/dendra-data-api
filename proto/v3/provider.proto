@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package v3;
+
+option go_package = "github.com/dendrascience/dendra-data-api/release/go/v3";
+
+import "v3/types.proto";
+
+service ProviderService {
+  // NOTES:
+  // rpc GetAggregate (range | count, sum, min and max)
+  // rpc GetDatapoint (range | sort)
+  // rpc StreamAggregates (range | sort | interval | count, max, min, sum)
+
+  rpc StreamDatapoints (StreamDatapointsRequest) returns (stream StreamDatapointsResponse) {}
+}
+
+message StreamDatapointsRequest {
+  DatapointsQuery query = 1;
+  DatapointsConfigInstance config_instance = 2;
+}
+
+message StreamDatapointsResponse {
+  repeated Datapoint datapoints = 1;
+}
