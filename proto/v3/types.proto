@@ -64,10 +64,14 @@ message Datapoint {
   EndTime et = 17;
 }
 
-message AnnotationActionEvaluate {
-  string evaluate = 1;
+message AnnotationActions {
+  google.protobuf.Struct attrib = 1;
+  string evaluate = 2;
+  bool exclude = 3;
+  repeated string flag = 4;
 }
 
+// User-defined service configuration for fetching datapoints
 message DatapointsConfigInstance {
   optional google.protobuf.Timestamp begins_at = 1;
   optional google.protobuf.Timestamp ends_before = 2;
@@ -76,20 +80,14 @@ message DatapointsConfigInstance {
 
   string connection = 4;
   string path = 5;
+  uint32 ref = 6;
 
-  // RESERVED 6
   // RESERVED 7
   // RESERVED 8
   // RESERVED 9
 
-  oneof actions {
-      AnnotationActionEvaluate evaluate_action = 10;
-  }
-}
-
-// User-defined service configuration for fetching datapoints
-message DatapointsConfig {
-  repeated DatapointsConfigInstance config_instances = 1;
+  AnnotationActions actions = 10;
+  repeated string annotation_ids = 11;
 }
 
 message DatapointsQuery {
@@ -103,4 +101,22 @@ message DatapointsQuery {
 
   optional double lat = 7;
   optional double lon = 8;
+}
+
+// A continuous series of datapoints indexed in time order.
+message Datastream {
+  string _id = 1;
+  string name = 2;
+  string version_id = 3;
+  string derivation_method = 4;
+  repeated string derived_from_datastream_ids = 5;
+
+  // RESERVED 6
+  // RESERVED 7
+  // RESERVED 8
+  // RESERVED 9
+
+  repeated DatapointsConfigInstance datapoints_config = 10;
+  repeated DatapointsConfigInstance datapoints_config_built = 11;
+  repeated DatapointsConfigInstance datapoints_config_refd = 12;
 }

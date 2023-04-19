@@ -1,6 +1,6 @@
 /*
  *
- * InfluxDB data provider
+ * Influx data provider service
  *
  */
 
@@ -43,7 +43,7 @@ func main() {
 	pb.RegisterProviderServiceServer(s, &server{})
 	reflection.Register(s)
 
-	fmt.Printf("server listening at %v", lis.Addr())
+	fmt.Printf("server listening at %v\n", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v\n", err)
 	}

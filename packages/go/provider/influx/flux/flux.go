@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/influxdata/influxdb-client-go/v2"
-	api "github.com/influxdata/influxdb-client-go/v2/api"
-	structpb "google.golang.org/protobuf/types/known/structpb"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	"github.com/influxdata/influxdb-client-go/v2/api"
+	"google.golang.org/protobuf/types/known/structpb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/dendrascience/dendra-data-api/packages/go/provider/influx/types"
 
