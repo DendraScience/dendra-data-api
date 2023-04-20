@@ -5,6 +5,5 @@ import (
 )
 
 var (
-	ErrDatastreamIdEmpty  = errors.New("datastream id cannot be empty")
-	ErrDatastreamNotFound = errors.New("datastream not found")
+	ErrDatastreamIdEmpty = errors.New("datastream id cannot be empty")
 )

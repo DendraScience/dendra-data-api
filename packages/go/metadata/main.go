@@ -73,7 +73,11 @@ func (s *server) GetDatastream(ctx context.Context, request *pb.GetDatastreamReq
 	if request.DatastreamId == "" {
 		return nil, types.ErrDatastreamIdEmpty
 	}
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, apiURL+"/datastreams/"+request.DatastreamId, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, apiURL+
+		"/datastreams/"+
+		request.DatastreamId+
+		"?$select%5B%5D=_id&$select%5B%5D=name&$select%5B%5D=version_id&$select%5B%5D=derivation_method&$select%5B%5D=derived_from_datastream_ids&$select%5B%5D=datapoints_config&$select%5B%5D=datapoints_config_built&$select%5B%5D=datapoints_config_refd",
+		nil)
 	if err != nil {
 		return nil, fmt.Errorf("new request error: %w", err)
 	}
@@ -86,6 +90,10 @@ func (s *server) GetDatastream(ctx context.Context, request *pb.GetDatastreamReq
 		return nil, fmt.Errorf("do request error: %w", err)
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("api returned non-success status code %d", resp.StatusCode)
+	}
 
 	// decode response body
 	respBody, err := ioutil.ReadAll(resp.Body)

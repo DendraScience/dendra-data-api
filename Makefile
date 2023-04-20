@@ -1,17 +1,5 @@
 PROJECT_BASE := $(shell pwd)
 PROJECT_OUTPUT := $(PROJECT_BASE)/output
-# PROJECT_NAME := $(shell basename $(PROJECT_BASE))
-# PROJECT_TARGET := $(PROJECT_BIN)/$(PROJECT_NAME)
-# GO_BIN := $(GOPATH)/bin
-# GO_BIN_TARGET := $(GO_BIN)/$(PROJECT_NAME)
-# SECONDS := $(shell date +%s)
-# BUILD_NUMBER := $(SECONDS)
-# BUILD_TIME := $(shell date -r $(SECONDS) -u +%FT%TZ)
-# GIT_REVISION := $(shell git rev-parse --short HEAD 2> /dev/null)
-# GIT_TAG := $(shell git describe --tags 2> /dev/null)
-# VERSION := $(if $(GIT_TAG),$(GIT_TAG),v0)
-# LDFLAGS := -ldflags "-X=main.BuildNumber=$(BUILD_NUMBER) -X=main.BuildTime=$(BUILD_TIME) -X=main.GitRevision=$(GIT_REVISION) -X=main.GitTag=$(GIT_TAG) -X=main.ProjectName=$(PROJECT_NAME) -X=main.Version=$(VERSION)"
-
 PKG_METADATA := packages/go/metadata
 PKG_PROVIDER_INFLUX := packages/go/provider/influx
 
