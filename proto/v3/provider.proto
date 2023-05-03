@@ -12,14 +12,14 @@ service ProviderService {
   // rpc GetDatapoint (range | sort)
   // rpc StreamAggregates (range | sort | interval | count, max, min, sum)
 
-  rpc StreamDatapoints (StreamDatapointsRequest) returns (stream StreamDatapointsResponse) {}
+  rpc StreamDatapoints (ProviderStreamDatapointsRequest) returns (stream ProviderStreamDatapointsResponse) {}
 }
 
-message StreamDatapointsRequest {
+message ProviderStreamDatapointsRequest {
   DatapointsQuery query = 1;
   DatapointsConfigInstance config_instance = 2;
 }
 
-message StreamDatapointsResponse {
+message ProviderStreamDatapointsResponse {
   repeated Datapoint datapoints = 1;
 }

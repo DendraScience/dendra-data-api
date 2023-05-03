@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from v3 import types_pb2 as v3_dot_types__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11v3/provider.proto\x12\x02v3\x1a\x0ev3/types.proto\"t\n\x17StreamDatapointsRequest\x12\"\n\x05query\x18\x01 \x01(\x0b\x32\x13.v3.DatapointsQuery\x12\x35\n\x0f\x63onfig_instance\x18\x02 \x01(\x0b\x32\x1c.v3.DatapointsConfigInstance\"=\n\x18StreamDatapointsResponse\x12!\n\ndatapoints\x18\x01 \x03(\x0b\x32\r.v3.Datapoint2d\n\x0fProviderService\x12Q\n\x10StreamDatapoints\x12\x1b.v3.StreamDatapointsRequest\x1a\x1c.v3.StreamDatapointsResponse\"\x00\x30\x01\x42\x38Z6github.com/dendrascience/dendra-data-api/release/go/v3b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11v3/provider.proto\x12\x02v3\x1a\x0ev3/types.proto\"|\n\x1fProviderStreamDatapointsRequest\x12\"\n\x05query\x18\x01 \x01(\x0b\x32\x13.v3.DatapointsQuery\x12\x35\n\x0f\x63onfig_instance\x18\x02 \x01(\x0b\x32\x1c.v3.DatapointsConfigInstance\"E\n ProviderStreamDatapointsResponse\x12!\n\ndatapoints\x18\x01 \x03(\x0b\x32\r.v3.Datapoint2t\n\x0fProviderService\x12\x61\n\x10StreamDatapoints\x12#.v3.ProviderStreamDatapointsRequest\x1a$.v3.ProviderStreamDatapointsResponse\"\x00\x30\x01\x42\x38Z6github.com/dendrascience/dendra-data-api/release/go/v3b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'v3.provider_pb2', globals())
@@ -22,10 +22,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z6github.com/dendrascience/dendra-data-api/release/go/v3'
-  _STREAMDATAPOINTSREQUEST._serialized_start=41
-  _STREAMDATAPOINTSREQUEST._serialized_end=157
-  _STREAMDATAPOINTSRESPONSE._serialized_start=159
-  _STREAMDATAPOINTSRESPONSE._serialized_end=220
-  _PROVIDERSERVICE._serialized_start=222
-  _PROVIDERSERVICE._serialized_end=322
+  _PROVIDERSTREAMDATAPOINTSREQUEST._serialized_start=41
+  _PROVIDERSTREAMDATAPOINTSREQUEST._serialized_end=165
+  _PROVIDERSTREAMDATAPOINTSRESPONSE._serialized_start=167
+  _PROVIDERSTREAMDATAPOINTSRESPONSE._serialized_end=236
+  _PROVIDERSERVICE._serialized_start=238
+  _PROVIDERSERVICE._serialized_end=354
 # @@protoc_insertion_point(module_scope)

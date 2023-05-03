@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProviderServiceClient interface {
-	StreamDatapoints(ctx context.Context, in *StreamDatapointsRequest, opts ...grpc.CallOption) (ProviderService_StreamDatapointsClient, error)
+	StreamDatapoints(ctx context.Context, in *ProviderStreamDatapointsRequest, opts ...grpc.CallOption) (ProviderService_StreamDatapointsClient, error)
 }
 
 type providerServiceClient struct {
@@ -37,7 +37,7 @@ func NewProviderServiceClient(cc grpc.ClientConnInterface) ProviderServiceClient
 	return &providerServiceClient{cc}
 }
 
-func (c *providerServiceClient) StreamDatapoints(ctx context.Context, in *StreamDatapointsRequest, opts ...grpc.CallOption) (ProviderService_StreamDatapointsClient, error) {
+func (c *providerServiceClient) StreamDatapoints(ctx context.Context, in *ProviderStreamDatapointsRequest, opts ...grpc.CallOption) (ProviderService_StreamDatapointsClient, error) {
 	stream, err := c.cc.NewStream(ctx, &ProviderService_ServiceDesc.Streams[0], ProviderService_StreamDatapoints_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (c *providerServiceClient) StreamDatapoints(ctx context.Context, in *Stream
 }
 
 type ProviderService_StreamDatapointsClient interface {
-	Recv() (*StreamDatapointsResponse, error)
+	Recv() (*ProviderStreamDatapointsResponse, error)
 	grpc.ClientStream
 }
 
@@ -61,8 +61,8 @@ type providerServiceStreamDatapointsClient struct {
 	grpc.ClientStream
 }
 
-func (x *providerServiceStreamDatapointsClient) Recv() (*StreamDatapointsResponse, error) {
-	m := new(StreamDatapointsResponse)
+func (x *providerServiceStreamDatapointsClient) Recv() (*ProviderStreamDatapointsResponse, error) {
+	m := new(ProviderStreamDatapointsResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (x *providerServiceStreamDatapointsClient) Recv() (*StreamDatapointsRespons
 // All implementations must embed UnimplementedProviderServiceServer
 // for forward compatibility
 type ProviderServiceServer interface {
-	StreamDatapoints(*StreamDatapointsRequest, ProviderService_StreamDatapointsServer) error
+	StreamDatapoints(*ProviderStreamDatapointsRequest, ProviderService_StreamDatapointsServer) error
 	mustEmbedUnimplementedProviderServiceServer()
 }
 
@@ -81,7 +81,7 @@ type ProviderServiceServer interface {
 type UnimplementedProviderServiceServer struct {
 }
 
-func (UnimplementedProviderServiceServer) StreamDatapoints(*StreamDatapointsRequest, ProviderService_StreamDatapointsServer) error {
+func (UnimplementedProviderServiceServer) StreamDatapoints(*ProviderStreamDatapointsRequest, ProviderService_StreamDatapointsServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamDatapoints not implemented")
 }
 func (UnimplementedProviderServiceServer) mustEmbedUnimplementedProviderServiceServer() {}
@@ -98,7 +98,7 @@ func RegisterProviderServiceServer(s grpc.ServiceRegistrar, srv ProviderServiceS
 }
 
 func _ProviderService_StreamDatapoints_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(StreamDatapointsRequest)
+	m := new(ProviderStreamDatapointsRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ func _ProviderService_StreamDatapoints_Handler(srv interface{}, stream grpc.Serv
 }
 
 type ProviderService_StreamDatapointsServer interface {
-	Send(*StreamDatapointsResponse) error
+	Send(*ProviderStreamDatapointsResponse) error
 	grpc.ServerStream
 }
 
@@ -114,7 +114,7 @@ type providerServiceStreamDatapointsServer struct {
 	grpc.ServerStream
 }
 
-func (x *providerServiceStreamDatapointsServer) Send(m *StreamDatapointsResponse) error {
+func (x *providerServiceStreamDatapointsServer) Send(m *ProviderStreamDatapointsResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 

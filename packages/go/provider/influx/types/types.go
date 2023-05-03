@@ -5,5 +5,5 @@ import (
 )
 
 type Driver interface {
-	StreamDatapoints(*pb.StreamDatapointsRequest, pb.ProviderService_StreamDatapointsServer) error
+	StreamDatapoints(*pb.ProviderStreamDatapointsRequest, pb.ProviderService_StreamDatapointsServer) error
 }

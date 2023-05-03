@@ -247,40 +247,40 @@ func (driver *Driver) instanceAndQueryParams(paramsStruct *structpb.Struct, quer
 	// process request query params
 	//
 
-	if query.GtTime == nil {
+	if query.GetGtTime() == nil {
 		p.startTime = time.Date(1800, time.January, 2, 0, 0, 0, 0, time.UTC)
-	} else if query.GtEqual {
-		p.startTime = query.GtTime.AsTime() // >=
+	} else if query.GetGtEqual() {
+		p.startTime = query.GetGtTime().AsTime() // >=
 	} else {
-		p.startTime = query.GtTime.AsTime().Add(time.Millisecond) // >
+		p.startTime = query.GetGtTime().AsTime().Add(time.Millisecond) // >
 	}
 
-	if query.LtTime == nil {
+	if query.GetLtTime() == nil {
 		p.stopTime = time.Date(2200, time.January, 2, 0, 0, 0, 0, time.UTC)
-	} else if query.LtEqual {
-		p.stopTime = query.LtTime.AsTime().Add(time.Millisecond) // <=
+	} else if query.GetLtEqual() {
+		p.stopTime = query.GetLtTime().AsTime().Add(time.Millisecond) // <=
 	} else {
-		p.stopTime = query.LtTime.AsTime() // <
+		p.stopTime = query.GetLtTime().AsTime() // <
 	}
 
-	p.sortAsc = query.SortAsc
+	p.sortAsc = query.GetSortAsc()
 
 	if query.Limit != nil {
 		p.hasLimit = true
-		p.limit = *query.Limit
+		p.limit = query.GetLimit()
 	}
 
 	return &instance, &p, nil
 }
 
 // TODO: handle shift, utc_offset, etc.
-func (driver *Driver) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.ProviderService_StreamDatapointsServer) error {
+func (driver *Driver) StreamDatapoints(request *pb.ProviderStreamDatapointsRequest, srv pb.ProviderService_StreamDatapointsServer) error {
 	const errPrefix = "flux.StreamDatapoints"
 
 	fmt.Println("flux stream datapoints")
 
 	// build the query
-	instance, p, err := driver.instanceAndQueryParams(request.ConfigInstance.Params, request.Query)
+	instance, p, err := driver.instanceAndQueryParams(request.GetConfigInstance().GetParams(), request.GetQuery())
 	if err != nil {
 		return fmt.Errorf("%s: %w", errPrefix, err)
 	}
@@ -371,7 +371,7 @@ func (driver *Driver) StreamDatapoints(request *pb.StreamDatapointsRequest, srv 
 		datapoints = append(datapoints, &datapoint)
 
 		if len(datapoints) >= driver.datapointsBatchSize {
-			resp := pb.StreamDatapointsResponse{Datapoints: datapoints}
+			resp := pb.ProviderStreamDatapointsResponse{Datapoints: datapoints}
 			err = srv.Send(&resp)
 			if err != nil {
 				return fmt.Errorf("%s: batch send error: %w", errPrefix, err)
@@ -383,7 +383,7 @@ func (driver *Driver) StreamDatapoints(request *pb.StreamDatapointsRequest, srv 
 		return fmt.Errorf("%s: result error: %w", errPrefix, result.Err())
 	} else if len(datapoints) > 0 {
 		// flush final batch
-		resp := pb.StreamDatapointsResponse{Datapoints: datapoints}
+		resp := pb.ProviderStreamDatapointsResponse{Datapoints: datapoints}
 		err = srv.Send(&resp)
 		if err != nil {
 			return fmt.Errorf("%s: flush send error: %w", errPrefix, err)

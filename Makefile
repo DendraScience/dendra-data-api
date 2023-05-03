@@ -1,9 +1,10 @@
 PROJECT_BASE := $(shell pwd)
 PROJECT_OUTPUT := $(PROJECT_BASE)/output
+PKG_DATAPOINTS := packages/go/datapoints
 PKG_METADATA := packages/go/metadata
 PKG_PROVIDER_INFLUX := packages/go/provider/influx
 
-main: print-vars build-metadata build-provider-influx
+main: print-vars build-datapoints build-metadata build-provider-influx
 
 print-vars:
 	@echo "Make vars..."
@@ -11,6 +12,28 @@ print-vars:
 	@echo PROJECT_OUTOUT=$(PROJECT_OUTPUT)
 	@echo PKG_METADATA=$(PKG_METADATA)
 	@echo PKG_PROVIDER_INFLUX=$(PKG_PROVIDER_INFLUX)
+
+
+##
+# datapoints-service
+##
+
+.PHONY: build-datapoints
+build-datapoints: fmt-datapoints
+	@echo "Running go build..."
+	go build -o $(PROJECT_OUTPUT)/datapoints-service -C $(PKG_DATAPOINTS) main.go
+	@printf "\e[32mSuccess!\e[39m\n"
+
+.PHONY: fmt-datapoints
+fmt-datapoints:
+	@echo "Running gofmt..."
+	gofmt -s -w $(PKG_DATAPOINTS)
+	@printf "\e[32mSuccess!\e[39m\n"
+
+.PHONY: run-datapoints
+run-datapoints: build-datapoints
+	@echo "Running service..."
+	$(PROJECT_OUTPUT)/datapoints-service
 
 
 ##

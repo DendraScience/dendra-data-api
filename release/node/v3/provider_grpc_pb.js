@@ -5,26 +5,26 @@ var grpc = require('@grpc/grpc-js');
 var v3_provider_pb = require('../v3/provider_pb.js');
 var v3_types_pb = require('../v3/types_pb.js');
 
-function serialize_v3_StreamDatapointsRequest(arg) {
-  if (!(arg instanceof v3_provider_pb.StreamDatapointsRequest)) {
-    throw new Error('Expected argument of type v3.StreamDatapointsRequest');
+function serialize_v3_ProviderStreamDatapointsRequest(arg) {
+  if (!(arg instanceof v3_provider_pb.ProviderStreamDatapointsRequest)) {
+    throw new Error('Expected argument of type v3.ProviderStreamDatapointsRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_v3_StreamDatapointsRequest(buffer_arg) {
-  return v3_provider_pb.StreamDatapointsRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_v3_ProviderStreamDatapointsRequest(buffer_arg) {
+  return v3_provider_pb.ProviderStreamDatapointsRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_v3_StreamDatapointsResponse(arg) {
-  if (!(arg instanceof v3_provider_pb.StreamDatapointsResponse)) {
-    throw new Error('Expected argument of type v3.StreamDatapointsResponse');
+function serialize_v3_ProviderStreamDatapointsResponse(arg) {
+  if (!(arg instanceof v3_provider_pb.ProviderStreamDatapointsResponse)) {
+    throw new Error('Expected argument of type v3.ProviderStreamDatapointsResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_v3_StreamDatapointsResponse(buffer_arg) {
-  return v3_provider_pb.StreamDatapointsResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_v3_ProviderStreamDatapointsResponse(buffer_arg) {
+  return v3_provider_pb.ProviderStreamDatapointsResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 
@@ -33,12 +33,12 @@ var ProviderServiceService = exports.ProviderServiceService = {
     path: '/v3.ProviderService/StreamDatapoints',
     requestStream: false,
     responseStream: true,
-    requestType: v3_provider_pb.StreamDatapointsRequest,
-    responseType: v3_provider_pb.StreamDatapointsResponse,
-    requestSerialize: serialize_v3_StreamDatapointsRequest,
-    requestDeserialize: deserialize_v3_StreamDatapointsRequest,
-    responseSerialize: serialize_v3_StreamDatapointsResponse,
-    responseDeserialize: deserialize_v3_StreamDatapointsResponse,
+    requestType: v3_provider_pb.ProviderStreamDatapointsRequest,
+    responseType: v3_provider_pb.ProviderStreamDatapointsResponse,
+    requestSerialize: serialize_v3_ProviderStreamDatapointsRequest,
+    requestDeserialize: deserialize_v3_ProviderStreamDatapointsRequest,
+    responseSerialize: serialize_v3_ProviderStreamDatapointsResponse,
+    responseDeserialize: deserialize_v3_ProviderStreamDatapointsResponse,
   },
 };
 

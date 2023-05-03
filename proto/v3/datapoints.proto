@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package v3;
+
+option go_package = "github.com/dendrascience/dendra-data-api/release/go/v3";
+
+import "v3/types.proto";
+
+service DatapointsService {
+  // NOTES:
+  // ListAggregates (range, only count, sum, min and max)
+  // GetDatapoint (range | sort)
+  // StreamAggregates (range | sort | interval | only count, max, min, sum)
+  // StreamDatapoints (range | sort | limit)
+
+  rpc StreamDatapoints (StreamDatapointsRequest) returns (stream StreamDatapointsResponse) {}
+}
+
+message StreamDatapointsRequest {
+  // TODO: add auth token!
+
+  string datastream_id = 1;
+  DatapointsQuery query = 2;
+}
+
+message StreamDatapointsResponse {
+  repeated Datapoint datapoints = 1;
+}

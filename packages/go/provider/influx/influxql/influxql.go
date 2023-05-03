@@ -18,7 +18,7 @@ type Instance struct {
 	// TODO: Finish!
 }
 
-func (driver *Driver) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.ProviderService_StreamDatapointsServer) error {
+func (driver *Driver) StreamDatapoints(request *pb.ProviderStreamDatapointsRequest, srv pb.ProviderService_StreamDatapointsServer) error {
 	fmt.Println("influxql streaming datapoints")
 
 	return nil

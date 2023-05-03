@@ -20,8 +20,8 @@ class ProviderServiceStub(object):
         """
         self.StreamDatapoints = channel.unary_stream(
                 '/v3.ProviderService/StreamDatapoints',
-                request_serializer=v3_dot_provider__pb2.StreamDatapointsRequest.SerializeToString,
-                response_deserializer=v3_dot_provider__pb2.StreamDatapointsResponse.FromString,
+                request_serializer=v3_dot_provider__pb2.ProviderStreamDatapointsRequest.SerializeToString,
+                response_deserializer=v3_dot_provider__pb2.ProviderStreamDatapointsResponse.FromString,
                 )
 
 
@@ -43,8 +43,8 @@ def add_ProviderServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'StreamDatapoints': grpc.unary_stream_rpc_method_handler(
                     servicer.StreamDatapoints,
-                    request_deserializer=v3_dot_provider__pb2.StreamDatapointsRequest.FromString,
-                    response_serializer=v3_dot_provider__pb2.StreamDatapointsResponse.SerializeToString,
+                    request_deserializer=v3_dot_provider__pb2.ProviderStreamDatapointsRequest.FromString,
+                    response_serializer=v3_dot_provider__pb2.ProviderStreamDatapointsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -72,7 +72,7 @@ class ProviderService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/v3.ProviderService/StreamDatapoints',
-            v3_dot_provider__pb2.StreamDatapointsRequest.SerializeToString,
-            v3_dot_provider__pb2.StreamDatapointsResponse.FromString,
+            v3_dot_provider__pb2.ProviderStreamDatapointsRequest.SerializeToString,
+            v3_dot_provider__pb2.ProviderStreamDatapointsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

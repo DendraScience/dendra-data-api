@@ -1485,8 +1485,8 @@ proto.v3.DatapointsConfigInstance.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getRef();
-  if (f !== 0) {
+  f = /** @type {number} */ (jspb.Message.getField(message, 6));
+  if (f != null) {
     writer.writeUint32(
       6,
       f
@@ -1671,7 +1671,25 @@ proto.v3.DatapointsConfigInstance.prototype.getRef = function() {
  * @return {!proto.v3.DatapointsConfigInstance} returns this
  */
 proto.v3.DatapointsConfigInstance.prototype.setRef = function(value) {
-  return jspb.Message.setProto3IntField(this, 6, value);
+  return jspb.Message.setField(this, 6, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.v3.DatapointsConfigInstance} returns this
+ */
+proto.v3.DatapointsConfigInstance.prototype.clearRef = function() {
+  return jspb.Message.setField(this, 6, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.v3.DatapointsConfigInstance.prototype.hasRef = function() {
+  return jspb.Message.getField(this, 6) != null;
 };
 
 

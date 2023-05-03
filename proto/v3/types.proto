@@ -80,7 +80,7 @@ message DatapointsConfigInstance {
 
   string connection = 4;
   string path = 5;
-  uint32 ref = 6;
+  optional uint32 ref = 6;
 
   // RESERVED 7
   // RESERVED 8

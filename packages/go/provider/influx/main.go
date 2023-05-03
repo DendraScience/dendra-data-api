@@ -7,10 +7,13 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
 	"net"
+	"os"
+	"os/signal"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -28,11 +31,15 @@ var (
 )
 
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
+
 	flag.Parse()
 
 	drivers["/influx/flux"] = flux.NewDriver()
 	drivers["/influx/select"] = influxql.NewDriver()
 
+	// set up server
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v\n", err)
@@ -43,26 +50,36 @@ func main() {
 	pb.RegisterProviderServiceServer(s, &server{})
 	reflection.Register(s)
 
-	fmt.Printf("server listening at %v\n", lis.Addr())
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v\n", err)
-	}
+	go func(l net.Listener) {
+		fmt.Printf("server listening at %v\n", l.Addr())
+		if err := s.Serve(l); err != nil {
+			log.Fatalf("failed to serve: %v\n", err)
+		}
+	}(lis)
+
+	<-ctx.Done()
+	stop()
+
+	fmt.Println("stopping server...")
+	s.Stop()
+
+	fmt.Println("bye!")
 }
 
 type server struct {
 	pb.UnimplementedProviderServiceServer
 }
 
-func (s *server) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.ProviderService_StreamDatapointsServer) error {
+func (s *server) StreamDatapoints(request *pb.ProviderStreamDatapointsRequest, srv pb.ProviderService_StreamDatapointsServer) error {
 	fmt.Println("stream datapoints request received")
 
-	if driver, found := drivers[request.ConfigInstance.Path]; found {
+	if driver, found := drivers[request.GetConfigInstance().GetPath()]; found {
 		if err := driver.StreamDatapoints(request, srv); err != nil {
 			return err
 		}
 	} else {
 		return &types.PathError{
-			Path: request.ConfigInstance.Path,
+			Path: request.GetConfigInstance().GetPath(),
 		}
 	}
 

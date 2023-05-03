@@ -15,6 +15,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
 	"time"
 
 	"google.golang.org/grpc"
@@ -38,6 +39,9 @@ var (
 )
 
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
+
 	flag.Parse()
 
 	apiURL = os.Getenv("WEB_API_URL")
@@ -47,6 +51,7 @@ func main() {
 
 	fmt.Printf("using web api at %s\n", apiURL)
 
+	// set up server
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v\n", err)
@@ -57,10 +62,20 @@ func main() {
 	pb.RegisterMetadataServiceServer(s, &server{})
 	reflection.Register(s)
 
-	fmt.Printf("server listening at %v\n", lis.Addr())
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v\n", err)
-	}
+	go func(l net.Listener) {
+		fmt.Printf("server listening at %v\n", l.Addr())
+		if err := s.Serve(l); err != nil {
+			log.Fatalf("failed to serve: %v\n", err)
+		}
+	}(lis)
+
+	<-ctx.Done()
+	stop()
+
+	fmt.Println("stopping server...")
+	s.Stop()
+
+	fmt.Println("bye!")
 }
 
 type server struct {
@@ -70,12 +85,12 @@ type server struct {
 func (s *server) GetDatastream(ctx context.Context, request *pb.GetDatastreamRequest) (*pb.GetDatastreamResponse, error) {
 	fmt.Println("get datastream request received")
 
-	if request.DatastreamId == "" {
+	if request.GetDatastreamId() == "" {
 		return nil, types.ErrDatastreamIdEmpty
 	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, apiURL+
 		"/datastreams/"+
-		request.DatastreamId+
+		request.GetDatastreamId()+
 		"?$select%5B%5D=_id&$select%5B%5D=name&$select%5B%5D=version_id&$select%5B%5D=derivation_method&$select%5B%5D=derived_from_datastream_ids&$select%5B%5D=datapoints_config&$select%5B%5D=datapoints_config_built&$select%5B%5D=datapoints_config_refd",
 		nil)
 	if err != nil {

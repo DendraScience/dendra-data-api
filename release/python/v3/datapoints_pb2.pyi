@@ -6,15 +6,15 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
-class ProviderStreamDatapointsRequest(_message.Message):
-    __slots__ = ["config_instance", "query"]
-    CONFIG_INSTANCE_FIELD_NUMBER: _ClassVar[int]
+class StreamDatapointsRequest(_message.Message):
+    __slots__ = ["datastream_id", "query"]
+    DATASTREAM_ID_FIELD_NUMBER: _ClassVar[int]
     QUERY_FIELD_NUMBER: _ClassVar[int]
-    config_instance: _types_pb2.DatapointsConfigInstance
+    datastream_id: str
     query: _types_pb2.DatapointsQuery
-    def __init__(self, query: _Optional[_Union[_types_pb2.DatapointsQuery, _Mapping]] = ..., config_instance: _Optional[_Union[_types_pb2.DatapointsConfigInstance, _Mapping]] = ...) -> None: ...
+    def __init__(self, datastream_id: _Optional[str] = ..., query: _Optional[_Union[_types_pb2.DatapointsQuery, _Mapping]] = ...) -> None: ...
 
-class ProviderStreamDatapointsResponse(_message.Message):
+class StreamDatapointsResponse(_message.Message):
     __slots__ = ["datapoints"]
     DATAPOINTS_FIELD_NUMBER: _ClassVar[int]
     datapoints: _containers.RepeatedCompositeFieldContainer[_types_pb2.Datapoint]
