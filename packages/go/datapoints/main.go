@@ -16,6 +16,7 @@ import (
 	"os"
 	"os/signal"
 	"strings"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -73,7 +74,7 @@ func dialClients[T any](envName string, itemPrefix string) map[string]*Connected
 	return clients
 }
 
-func queryIntervalFromQuery(query *pb.DatapointsQuery) types.Interval {
+func queryIntervalFromQuery(query *pb.DatapointsQuery, datastream *pb.Datastream) types.Interval {
 	interval := types.NewQueryInterval()
 
 	if query.GetGtTime() != nil {
@@ -83,6 +84,12 @@ func queryIntervalFromQuery(query *pb.DatapointsQuery) types.Interval {
 	if query.GetLtTime() != nil {
 		interval.End = query.GetLtTime().AsTime()
 		interval.RightOpen = !query.GetLtEqual()
+	}
+
+	if query.IsLocal {
+		offset := time.Duration(datastream.GetStationLookup().GetUtcOffset()) * time.Second
+		interval.Start = interval.Start.Add(-offset)
+		interval.End = interval.End.Add(-offset)
 	}
 
 	return interval
@@ -159,7 +166,7 @@ func (s *server) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.Da
 	datastream := getDatastreamResp.GetDatastream()
 	query := request.GetQuery()
 	config := types.MergeConfig(datastream, !query.GetSortAsc())
-	queryInterval := queryIntervalFromQuery(query)
+	queryInterval := queryIntervalFromQuery(query, datastream)
 
 	// DEBUG
 	log.Printf("merged config: %v\n", config)

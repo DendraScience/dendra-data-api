@@ -24,7 +24,8 @@ message Datapoint {
   // An offset in seconds between the time zone and UTC
   sint32 o = 2;
 
-  // RESERVED 3
+  // The timestamp in agnostic local time (offset applied)
+  google.protobuf.Timestamp lt = 3;
 
   // A custom data object
   google.protobuf.Struct d = 4;
@@ -98,9 +99,14 @@ message DatapointsQuery {
   optional google.protobuf.Timestamp gt_time = 4;
   bool lt_equal = 5;
   bool gt_equal = 6;
+  bool is_local = 7;
 
-  optional double lat = 7;
-  optional double lon = 8;
+  optional double lat = 8;
+  optional double lon = 9;
+}
+
+message StationLookup {
+  sint32 utc_offset = 1;
 }
 
 // A continuous series of datapoints indexed in time order.
@@ -119,4 +125,6 @@ message Datastream {
   repeated DatapointsConfigInstance datapoints_config = 10;
   repeated DatapointsConfigInstance datapoints_config_built = 11;
   repeated DatapointsConfigInstance datapoints_config_refd = 12;
+
+  StationLookup station_lookup = 13;
 }

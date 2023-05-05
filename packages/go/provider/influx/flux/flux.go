@@ -37,8 +37,11 @@ type queryParams struct {
 	fields      []string
 	tagSet      map[string]string
 	coalesce    bool
-	utcOffset   int
-	vField      string
+	// TODO: implement this later
+	// local		bool
+	shift     time.Duration
+	utcOffset time.Duration
+	vField    string
 
 	// assigned from request query params
 	startTime time.Time
@@ -50,7 +53,12 @@ type queryParams struct {
 
 const pipe = " |> "
 
-var unsafeRe = regexp.MustCompile(`\W`)
+var (
+	maxTime = time.Date(2200, time.January, 2, 0, 0, 0, 0, time.UTC)
+	minTime = time.Date(1800, time.January, 2, 0, 0, 0, 0, time.UTC)
+
+	unsafeRe = regexp.MustCompile(`\W`)
+)
 
 func safeName(s string) string {
 	return unsafeRe.ReplaceAllString(s, "_")
@@ -240,7 +248,8 @@ func (driver *Driver) instanceAndQueryParams(paramsStruct *structpb.Struct, quer
 	}
 
 	p.coalesce = queryFields["coalesce"].GetBoolValue()
-	p.utcOffset = int(queryFields["utc_offet"].GetNumberValue())
+	p.shift = time.Duration(queryFields["shift"].GetNumberValue()) * time.Second
+	p.utcOffset = time.Duration(queryFields["utc_offset"].GetNumberValue()) * time.Second
 	p.vField = queryFields["v_field"].GetStringValue()
 
 	//
@@ -248,19 +257,19 @@ func (driver *Driver) instanceAndQueryParams(paramsStruct *structpb.Struct, quer
 	//
 
 	if query.GetGtTime() == nil {
-		p.startTime = time.Date(1800, time.January, 2, 0, 0, 0, 0, time.UTC)
+		p.startTime = minTime
 	} else if query.GetGtEqual() {
-		p.startTime = query.GetGtTime().AsTime() // >=
+		p.startTime = query.GetGtTime().AsTime().Add(p.shift) // >=
 	} else {
-		p.startTime = query.GetGtTime().AsTime().Add(time.Millisecond) // >
+		p.startTime = query.GetGtTime().AsTime().Add(p.shift + time.Millisecond) // >
 	}
 
 	if query.GetLtTime() == nil {
-		p.stopTime = time.Date(2200, time.January, 2, 0, 0, 0, 0, time.UTC)
+		p.stopTime = maxTime
 	} else if query.GetLtEqual() {
-		p.stopTime = query.GetLtTime().AsTime().Add(time.Millisecond) // <=
+		p.stopTime = query.GetLtTime().AsTime().Add(p.shift + time.Millisecond) // <=
 	} else {
-		p.stopTime = query.GetLtTime().AsTime() // <
+		p.stopTime = query.GetLtTime().AsTime().Add(p.shift) // <
 	}
 
 	p.sortAsc = query.GetSortAsc()
@@ -273,7 +282,6 @@ func (driver *Driver) instanceAndQueryParams(paramsStruct *structpb.Struct, quer
 	return &instance, &p, nil
 }
 
-// TODO: handle shift, utc_offset, etc.
 func (driver *Driver) StreamDatapoints(request *pb.ProviderStreamDatapointsRequest, srv pb.ProviderService_StreamDatapointsServer) error {
 	const errPrefix = "flux.StreamDatapoints"
 
@@ -334,7 +342,7 @@ func (driver *Driver) StreamDatapoints(request *pb.ProviderStreamDatapointsReque
 	// iterate over query result lines, shape and send datapoints
 	for result.Next() {
 		record := result.Record()
-		time := record.Time()
+		ts := record.Time()
 		values := record.Values()
 
 		delete(values, "_time")
@@ -357,6 +365,9 @@ func (driver *Driver) StreamDatapoints(request *pb.ProviderStreamDatapointsReque
 				}
 			}
 		}
+		// TODO: handle coalesce
+		// else if p.coalesce {
+		// }
 
 		d, err := structpb.NewStruct(values)
 		if err != nil {
@@ -364,9 +375,11 @@ func (driver *Driver) StreamDatapoints(request *pb.ProviderStreamDatapointsReque
 		}
 
 		datapoint := pb.Datapoint{
-			T: timestamppb.New(time),
-			D: d,
-			V: v,
+			T:  timestamppb.New(ts.Add(-p.shift)),
+			Lt: timestamppb.New(ts.Add(-p.shift + p.utcOffset)),
+			O:  int32(p.utcOffset.Seconds()),
+			D:  d,
+			V:  v, // optional
 		}
 		datapoints = append(datapoints, &datapoint)
 

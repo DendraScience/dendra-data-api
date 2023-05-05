@@ -20,12 +20,13 @@ class AnnotationActions(_message.Message):
     def __init__(self, attrib: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., evaluate: _Optional[str] = ..., exclude: bool = ..., flag: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class Datapoint(_message.Message):
-    __slots__ = ["d", "da", "et", "g", "gc", "o", "q", "t", "ti", "uv", "v", "va"]
+    __slots__ = ["d", "da", "et", "g", "gc", "lt", "o", "q", "t", "ti", "uv", "v", "va"]
     DA_FIELD_NUMBER: _ClassVar[int]
     D_FIELD_NUMBER: _ClassVar[int]
     ET_FIELD_NUMBER: _ClassVar[int]
     GC_FIELD_NUMBER: _ClassVar[int]
     G_FIELD_NUMBER: _ClassVar[int]
+    LT_FIELD_NUMBER: _ClassVar[int]
     O_FIELD_NUMBER: _ClassVar[int]
     Q_FIELD_NUMBER: _ClassVar[int]
     TI_FIELD_NUMBER: _ClassVar[int]
@@ -38,6 +39,7 @@ class Datapoint(_message.Message):
     et: EndTime
     g: _struct_pb2.Struct
     gc: _containers.RepeatedScalarFieldContainer[float]
+    lt: _timestamp_pb2.Timestamp
     o: int
     q: _struct_pb2.Struct
     t: _timestamp_pb2.Timestamp
@@ -45,7 +47,7 @@ class Datapoint(_message.Message):
     uv: float
     v: float
     va: _containers.RepeatedScalarFieldContainer[float]
-    def __init__(self, t: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., o: _Optional[int] = ..., d: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., da: _Optional[_Iterable[_Union[_struct_pb2.Struct, _Mapping]]] = ..., v: _Optional[float] = ..., va: _Optional[_Iterable[float]] = ..., uv: _Optional[float] = ..., g: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., gc: _Optional[_Iterable[float]] = ..., q: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., ti: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., et: _Optional[_Union[EndTime, _Mapping]] = ...) -> None: ...
+    def __init__(self, t: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., o: _Optional[int] = ..., lt: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., d: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., da: _Optional[_Iterable[_Union[_struct_pb2.Struct, _Mapping]]] = ..., v: _Optional[float] = ..., va: _Optional[_Iterable[float]] = ..., uv: _Optional[float] = ..., g: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., gc: _Optional[_Iterable[float]] = ..., q: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., ti: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., et: _Optional[_Union[EndTime, _Mapping]] = ...) -> None: ...
 
 class DatapointsConfigInstance(_message.Message):
     __slots__ = ["actions", "annotation_ids", "begins_at", "connection", "ends_before", "params", "path", "ref"]
@@ -68,9 +70,10 @@ class DatapointsConfigInstance(_message.Message):
     def __init__(self, begins_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., ends_before: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., params: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., connection: _Optional[str] = ..., path: _Optional[str] = ..., ref: _Optional[int] = ..., actions: _Optional[_Union[AnnotationActions, _Mapping]] = ..., annotation_ids: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class DatapointsQuery(_message.Message):
-    __slots__ = ["gt_equal", "gt_time", "lat", "limit", "lon", "lt_equal", "lt_time", "sort_asc"]
+    __slots__ = ["gt_equal", "gt_time", "is_local", "lat", "limit", "lon", "lt_equal", "lt_time", "sort_asc"]
     GT_EQUAL_FIELD_NUMBER: _ClassVar[int]
     GT_TIME_FIELD_NUMBER: _ClassVar[int]
+    IS_LOCAL_FIELD_NUMBER: _ClassVar[int]
     LAT_FIELD_NUMBER: _ClassVar[int]
     LIMIT_FIELD_NUMBER: _ClassVar[int]
     LON_FIELD_NUMBER: _ClassVar[int]
@@ -79,22 +82,24 @@ class DatapointsQuery(_message.Message):
     SORT_ASC_FIELD_NUMBER: _ClassVar[int]
     gt_equal: bool
     gt_time: _timestamp_pb2.Timestamp
+    is_local: bool
     lat: float
     limit: int
     lon: float
     lt_equal: bool
     lt_time: _timestamp_pb2.Timestamp
     sort_asc: bool
-    def __init__(self, sort_asc: bool = ..., limit: _Optional[int] = ..., lt_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., gt_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., lt_equal: bool = ..., gt_equal: bool = ..., lat: _Optional[float] = ..., lon: _Optional[float] = ...) -> None: ...
+    def __init__(self, sort_asc: bool = ..., limit: _Optional[int] = ..., lt_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., gt_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., lt_equal: bool = ..., gt_equal: bool = ..., is_local: bool = ..., lat: _Optional[float] = ..., lon: _Optional[float] = ...) -> None: ...
 
 class Datastream(_message.Message):
-    __slots__ = ["_id", "datapoints_config", "datapoints_config_built", "datapoints_config_refd", "derivation_method", "derived_from_datastream_ids", "name", "version_id"]
+    __slots__ = ["_id", "datapoints_config", "datapoints_config_built", "datapoints_config_refd", "derivation_method", "derived_from_datastream_ids", "name", "station_lookup", "version_id"]
     DATAPOINTS_CONFIG_BUILT_FIELD_NUMBER: _ClassVar[int]
     DATAPOINTS_CONFIG_FIELD_NUMBER: _ClassVar[int]
     DATAPOINTS_CONFIG_REFD_FIELD_NUMBER: _ClassVar[int]
     DERIVATION_METHOD_FIELD_NUMBER: _ClassVar[int]
     DERIVED_FROM_DATASTREAM_IDS_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
+    STATION_LOOKUP_FIELD_NUMBER: _ClassVar[int]
     VERSION_ID_FIELD_NUMBER: _ClassVar[int]
     _ID_FIELD_NUMBER: _ClassVar[int]
     _id: str
@@ -104,8 +109,9 @@ class Datastream(_message.Message):
     derivation_method: str
     derived_from_datastream_ids: _containers.RepeatedScalarFieldContainer[str]
     name: str
+    station_lookup: StationLookup
     version_id: str
-    def __init__(self, _id: _Optional[str] = ..., name: _Optional[str] = ..., version_id: _Optional[str] = ..., derivation_method: _Optional[str] = ..., derived_from_datastream_ids: _Optional[_Iterable[str]] = ..., datapoints_config: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_built: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_refd: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ...) -> None: ...
+    def __init__(self, _id: _Optional[str] = ..., name: _Optional[str] = ..., version_id: _Optional[str] = ..., derivation_method: _Optional[str] = ..., derived_from_datastream_ids: _Optional[_Iterable[str]] = ..., datapoints_config: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_built: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_refd: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., station_lookup: _Optional[_Union[StationLookup, _Mapping]] = ...) -> None: ...
 
 class EndTime(_message.Message):
     __slots__ = ["o", "t"]
@@ -114,3 +120,9 @@ class EndTime(_message.Message):
     o: int
     t: _timestamp_pb2.Timestamp
     def __init__(self, t: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., o: _Optional[int] = ...) -> None: ...
+
+class StationLookup(_message.Message):
+    __slots__ = ["utc_offset"]
+    UTC_OFFSET_FIELD_NUMBER: _ClassVar[int]
+    utc_offset: int
+    def __init__(self, utc_offset: _Optional[int] = ...) -> None: ...
