@@ -8,13 +8,13 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"io"
 	"log"
 	"net"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"time"
 
@@ -35,7 +35,7 @@ type ConnectedClient[T any] struct {
 }
 
 var (
-	port      = flag.Int("port", 50051, "The server port")
+	// port      = 50051
 	metadata  *ConnectedClient[pb.MetadataServiceClient]
 	providers map[string]*ConnectedClient[pb.ProviderServiceClient]
 )
@@ -99,8 +99,6 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
-	flag.Parse()
-
 	// set up a connection to the metadata server
 	metadata = dialClient[pb.MetadataServiceClient]("METADATA_SERVICE")
 	defer metadata.conn.Close()
@@ -118,7 +116,11 @@ func main() {
 	// TODO: set up connections to transformer clients
 
 	// set up server
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	port, err := strconv.Atoi(os.Getenv("PORT"))
+	if err != nil {
+		port = 50051
+	}
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v\n", err)
 	}
@@ -161,7 +163,7 @@ func (s *server) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.Da
 	}
 
 	// DEBUG
-	log.Printf("got datasteam response: %v\n", getDatastreamResp)
+	log.Printf("get datasteam response: %v\n", getDatastreamResp)
 
 	datastream := getDatastreamResp.GetDatastream()
 	query := request.GetQuery()

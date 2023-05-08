@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package v3;
+
+option go_package = "github.com/dendrascience/dendra-data-api/release/go/v3";
+
+import "v3/types.proto";
+
+service ConverterService {
+  // NOTES:
+  // rpc ListUnits
+  // rpc ConvertOne
+  // rpc ConvertStream
+
+  rpc ConvertMany (ConvertManyRequest) returns (ConvertManyResponse) {}
+}
+
+message ConvertManyRequest {
+  string from_unit = 1;
+  string to_unit = 2;
+  repeated Datapoint datapoints = 3;
+}
+
+message ConvertManyResponse {
+  repeated Datapoint datapoints = 1;
+}

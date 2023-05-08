@@ -578,8 +578,8 @@ type Datastream struct {
 	unknownFields protoimpl.UnknownFields
 
 	XId                      string                      `protobuf:"bytes,1,opt,name=_id,json=Id,proto3" json:"_id,omitempty"`
-	Name                     string                      `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	VersionId                string                      `protobuf:"bytes,3,opt,name=version_id,json=versionId,proto3" json:"version_id,omitempty"`
+	VersionId                string                      `protobuf:"bytes,2,opt,name=version_id,json=versionId,proto3" json:"version_id,omitempty"`
+	Name                     string                      `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	DerivationMethod         string                      `protobuf:"bytes,4,opt,name=derivation_method,json=derivationMethod,proto3" json:"derivation_method,omitempty"`
 	DerivedFromDatastreamIds []string                    `protobuf:"bytes,5,rep,name=derived_from_datastream_ids,json=derivedFromDatastreamIds,proto3" json:"derived_from_datastream_ids,omitempty"`
 	DatapointsConfig         []*DatapointsConfigInstance `protobuf:"bytes,10,rep,name=datapoints_config,json=datapointsConfig,proto3" json:"datapoints_config,omitempty"`
@@ -627,16 +627,16 @@ func (x *Datastream) GetXId() string {
 	return ""
 }
 
-func (x *Datastream) GetName() string {
+func (x *Datastream) GetVersionId() string {
 	if x != nil {
-		return x.Name
+		return x.VersionId
 	}
 	return ""
 }
 
-func (x *Datastream) GetVersionId() string {
+func (x *Datastream) GetName() string {
 	if x != nil {
-		return x.VersionId
+		return x.Name
 	}
 	return ""
 }
@@ -679,6 +679,94 @@ func (x *Datastream) GetDatapointsConfigRefd() []*DatapointsConfigInstance {
 func (x *Datastream) GetStationLookup() *StationLookup {
 	if x != nil {
 		return x.StationLookup
+	}
+	return nil
+}
+
+// A quantity used as a standard of measurement.
+type Uom struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	XId                 string           `protobuf:"bytes,1,opt,name=_id,json=Id,proto3" json:"_id,omitempty"`
+	VersionId           string           `protobuf:"bytes,2,opt,name=version_id,json=versionId,proto3" json:"version_id,omitempty"`
+	SomId               string           `protobuf:"bytes,3,opt,name=som_id,json=somId,proto3" json:"som_id,omitempty"`
+	ConvertibleToUomIds []string         `protobuf:"bytes,4,rep,name=convertible_to_uom_ids,json=convertibleToUomIds,proto3" json:"convertible_to_uom_ids,omitempty"`
+	UnitTags            []string         `protobuf:"bytes,5,rep,name=unit_tags,json=unitTags,proto3" json:"unit_tags,omitempty"`
+	LibraryConfig       *structpb.Struct `protobuf:"bytes,6,opt,name=library_config,json=libraryConfig,proto3" json:"library_config,omitempty"`
+}
+
+func (x *Uom) Reset() {
+	*x = Uom{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_v3_types_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Uom) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Uom) ProtoMessage() {}
+
+func (x *Uom) ProtoReflect() protoreflect.Message {
+	mi := &file_v3_types_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Uom.ProtoReflect.Descriptor instead.
+func (*Uom) Descriptor() ([]byte, []int) {
+	return file_v3_types_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *Uom) GetXId() string {
+	if x != nil {
+		return x.XId
+	}
+	return ""
+}
+
+func (x *Uom) GetVersionId() string {
+	if x != nil {
+		return x.VersionId
+	}
+	return ""
+}
+
+func (x *Uom) GetSomId() string {
+	if x != nil {
+		return x.SomId
+	}
+	return ""
+}
+
+func (x *Uom) GetConvertibleToUomIds() []string {
+	if x != nil {
+		return x.ConvertibleToUomIds
+	}
+	return nil
+}
+
+func (x *Uom) GetUnitTags() []string {
+	if x != nil {
+		return x.UnitTags
+	}
+	return nil
+}
+
+func (x *Uom) GetLibraryConfig() *structpb.Struct {
+	if x != nil {
+		return x.LibraryConfig
 	}
 	return nil
 }
@@ -784,10 +872,10 @@ var file_v3_types_proto_rawDesc = []byte{
 	0x5f, 0x6f, 0x66, 0x66, 0x73, 0x65, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x11, 0x52, 0x09, 0x75,
 	0x74, 0x63, 0x4f, 0x66, 0x66, 0x73, 0x65, 0x74, 0x22, 0xeb, 0x03, 0x0a, 0x0a, 0x44, 0x61, 0x74,
 	0x61, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x12, 0x0f, 0x0a, 0x03, 0x5f, 0x69, 0x64, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1d, 0x0a, 0x0a,
-	0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x09, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x2b, 0x0a, 0x11, 0x64,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x64, 0x12, 0x1d, 0x0a, 0x0a, 0x76, 0x65, 0x72, 0x73,
+	0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x76, 0x65,
+	0x72, 0x73, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x2b, 0x0a, 0x11, 0x64,
 	0x65, 0x72, 0x69, 0x76, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64,
 	0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x64, 0x65, 0x72, 0x69, 0x76, 0x61, 0x74, 0x69,
 	0x6f, 0x6e, 0x4d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x12, 0x3d, 0x0a, 0x1b, 0x64, 0x65, 0x72, 0x69,
@@ -813,11 +901,25 @@ var file_v3_types_proto_rawDesc = []byte{
 	0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x6c, 0x6f, 0x6f, 0x6b, 0x75, 0x70, 0x18, 0x0d,
 	0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x76, 0x33, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x69, 0x6f,
 	0x6e, 0x4c, 0x6f, 0x6f, 0x6b, 0x75, 0x70, 0x52, 0x0d, 0x73, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e,
-	0x4c, 0x6f, 0x6f, 0x6b, 0x75, 0x70, 0x42, 0x38, 0x5a, 0x36, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
-	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x64, 0x65, 0x6e, 0x64, 0x72, 0x61, 0x73, 0x63, 0x69, 0x65, 0x6e,
-	0x63, 0x65, 0x2f, 0x64, 0x65, 0x6e, 0x64, 0x72, 0x61, 0x2d, 0x64, 0x61, 0x74, 0x61, 0x2d, 0x61,
-	0x70, 0x69, 0x2f, 0x72, 0x65, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x2f, 0x67, 0x6f, 0x2f, 0x76, 0x33,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x4c, 0x6f, 0x6f, 0x6b, 0x75, 0x70, 0x22, 0xde, 0x01, 0x0a, 0x03, 0x55, 0x6f, 0x6d, 0x12, 0x0f,
+	0x0a, 0x03, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x49, 0x64, 0x12,
+	0x1d, 0x0a, 0x0a, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x09, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x15,
+	0x0a, 0x06, 0x73, 0x6f, 0x6d, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+	0x73, 0x6f, 0x6d, 0x49, 0x64, 0x12, 0x33, 0x0a, 0x16, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74,
+	0x69, 0x62, 0x6c, 0x65, 0x5f, 0x74, 0x6f, 0x5f, 0x75, 0x6f, 0x6d, 0x5f, 0x69, 0x64, 0x73, 0x18,
+	0x04, 0x20, 0x03, 0x28, 0x09, 0x52, 0x13, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x74, 0x69, 0x62,
+	0x6c, 0x65, 0x54, 0x6f, 0x55, 0x6f, 0x6d, 0x49, 0x64, 0x73, 0x12, 0x1b, 0x0a, 0x09, 0x75, 0x6e,
+	0x69, 0x74, 0x5f, 0x74, 0x61, 0x67, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x09, 0x52, 0x08, 0x75,
+	0x6e, 0x69, 0x74, 0x54, 0x61, 0x67, 0x73, 0x12, 0x3e, 0x0a, 0x0e, 0x6c, 0x69, 0x62, 0x72, 0x61,
+	0x72, 0x79, 0x5f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x17, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
+	0x66, 0x2e, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x52, 0x0d, 0x6c, 0x69, 0x62, 0x72, 0x61, 0x72,
+	0x79, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x42, 0x38, 0x5a, 0x36, 0x67, 0x69, 0x74, 0x68, 0x75,
+	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x64, 0x65, 0x6e, 0x64, 0x72, 0x61, 0x73, 0x63, 0x69, 0x65,
+	0x6e, 0x63, 0x65, 0x2f, 0x64, 0x65, 0x6e, 0x64, 0x72, 0x61, 0x2d, 0x64, 0x61, 0x74, 0x61, 0x2d,
+	0x61, 0x70, 0x69, 0x2f, 0x72, 0x65, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x2f, 0x67, 0x6f, 0x2f, 0x76,
+	0x33, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -832,7 +934,7 @@ func file_v3_types_proto_rawDescGZIP() []byte {
 	return file_v3_types_proto_rawDescData
 }
 
-var file_v3_types_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_v3_types_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_v3_types_proto_goTypes = []interface{}{
 	(*EndTime)(nil),                  // 0: v3.EndTime
 	(*Datapoint)(nil),                // 1: v3.Datapoint
@@ -841,35 +943,37 @@ var file_v3_types_proto_goTypes = []interface{}{
 	(*DatapointsQuery)(nil),          // 4: v3.DatapointsQuery
 	(*StationLookup)(nil),            // 5: v3.StationLookup
 	(*Datastream)(nil),               // 6: v3.Datastream
-	(*timestamppb.Timestamp)(nil),    // 7: google.protobuf.Timestamp
-	(*structpb.Struct)(nil),          // 8: google.protobuf.Struct
+	(*Uom)(nil),                      // 7: v3.Uom
+	(*timestamppb.Timestamp)(nil),    // 8: google.protobuf.Timestamp
+	(*structpb.Struct)(nil),          // 9: google.protobuf.Struct
 }
 var file_v3_types_proto_depIdxs = []int32{
-	7,  // 0: v3.EndTime.t:type_name -> google.protobuf.Timestamp
-	7,  // 1: v3.Datapoint.t:type_name -> google.protobuf.Timestamp
-	7,  // 2: v3.Datapoint.lt:type_name -> google.protobuf.Timestamp
-	8,  // 3: v3.Datapoint.d:type_name -> google.protobuf.Struct
-	8,  // 4: v3.Datapoint.da:type_name -> google.protobuf.Struct
-	8,  // 5: v3.Datapoint.g:type_name -> google.protobuf.Struct
-	8,  // 6: v3.Datapoint.q:type_name -> google.protobuf.Struct
-	8,  // 7: v3.Datapoint.ti:type_name -> google.protobuf.Struct
+	8,  // 0: v3.EndTime.t:type_name -> google.protobuf.Timestamp
+	8,  // 1: v3.Datapoint.t:type_name -> google.protobuf.Timestamp
+	8,  // 2: v3.Datapoint.lt:type_name -> google.protobuf.Timestamp
+	9,  // 3: v3.Datapoint.d:type_name -> google.protobuf.Struct
+	9,  // 4: v3.Datapoint.da:type_name -> google.protobuf.Struct
+	9,  // 5: v3.Datapoint.g:type_name -> google.protobuf.Struct
+	9,  // 6: v3.Datapoint.q:type_name -> google.protobuf.Struct
+	9,  // 7: v3.Datapoint.ti:type_name -> google.protobuf.Struct
 	0,  // 8: v3.Datapoint.et:type_name -> v3.EndTime
-	8,  // 9: v3.AnnotationActions.attrib:type_name -> google.protobuf.Struct
-	7,  // 10: v3.DatapointsConfigInstance.begins_at:type_name -> google.protobuf.Timestamp
-	7,  // 11: v3.DatapointsConfigInstance.ends_before:type_name -> google.protobuf.Timestamp
-	8,  // 12: v3.DatapointsConfigInstance.params:type_name -> google.protobuf.Struct
+	9,  // 9: v3.AnnotationActions.attrib:type_name -> google.protobuf.Struct
+	8,  // 10: v3.DatapointsConfigInstance.begins_at:type_name -> google.protobuf.Timestamp
+	8,  // 11: v3.DatapointsConfigInstance.ends_before:type_name -> google.protobuf.Timestamp
+	9,  // 12: v3.DatapointsConfigInstance.params:type_name -> google.protobuf.Struct
 	2,  // 13: v3.DatapointsConfigInstance.actions:type_name -> v3.AnnotationActions
-	7,  // 14: v3.DatapointsQuery.lt_time:type_name -> google.protobuf.Timestamp
-	7,  // 15: v3.DatapointsQuery.gt_time:type_name -> google.protobuf.Timestamp
+	8,  // 14: v3.DatapointsQuery.lt_time:type_name -> google.protobuf.Timestamp
+	8,  // 15: v3.DatapointsQuery.gt_time:type_name -> google.protobuf.Timestamp
 	3,  // 16: v3.Datastream.datapoints_config:type_name -> v3.DatapointsConfigInstance
 	3,  // 17: v3.Datastream.datapoints_config_built:type_name -> v3.DatapointsConfigInstance
 	3,  // 18: v3.Datastream.datapoints_config_refd:type_name -> v3.DatapointsConfigInstance
 	5,  // 19: v3.Datastream.station_lookup:type_name -> v3.StationLookup
-	20, // [20:20] is the sub-list for method output_type
-	20, // [20:20] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	9,  // 20: v3.Uom.library_config:type_name -> google.protobuf.Struct
+	21, // [21:21] is the sub-list for method output_type
+	21, // [21:21] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_v3_types_proto_init() }
@@ -962,6 +1066,18 @@ func file_v3_types_proto_init() {
 				return nil
 			}
 		}
+		file_v3_types_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Uom); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_v3_types_proto_msgTypes[1].OneofWrappers = []interface{}{}
 	file_v3_types_proto_msgTypes[3].OneofWrappers = []interface{}{}
@@ -972,7 +1088,7 @@ func file_v3_types_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_v3_types_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

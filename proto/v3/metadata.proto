@@ -5,9 +5,11 @@ package v3;
 option go_package = "github.com/dendrascience/dendra-data-api/release/go/v3";
 
 import "v3/types.proto";
+import "google/protobuf/empty.proto";
 
 service MetadataService {
   rpc GetDatastream (GetDatastreamRequest) returns (GetDatastreamResponse) {}
+  rpc ListUoms (google.protobuf.Empty) returns (ListUomsResponse) {}
 }
 
 message GetDatastreamRequest {
@@ -18,4 +20,8 @@ message GetDatastreamRequest {
 
 message GetDatastreamResponse {
   Datastream datastream = 1;
+}
+
+message ListUomsResponse {
+  repeated Uom uoms = 1 [json_name="data"];
 }

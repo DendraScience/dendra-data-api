@@ -8,7 +8,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -16,11 +15,13 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/dendrascience/dendra-data-api/packages/go/metadata/types"
 
@@ -32,7 +33,6 @@ var (
 		Timeout: time.Second * 20,
 	}
 	apiURL           string
-	port             = flag.Int("port", 50051, "The server port")
 	unmarshalOptions = protojson.UnmarshalOptions{
 		DiscardUnknown: true,
 	}
@@ -42,8 +42,6 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
-	flag.Parse()
-
 	apiURL = os.Getenv("WEB_API_URL")
 	if apiURL == "" {
 		apiURL = "https://api.dendra.science/v2"
@@ -52,7 +50,11 @@ func main() {
 	fmt.Printf("using web api at %s\n", apiURL)
 
 	// set up server
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	port, err := strconv.Atoi(os.Getenv("PORT"))
+	if err != nil {
+		port = 50051
+	}
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v\n", err)
 	}
@@ -123,4 +125,38 @@ func (s *server) GetDatastream(ctx context.Context, request *pb.GetDatastreamReq
 	return &pb.GetDatastreamResponse{
 		Datastream: &datastream,
 	}, nil
+}
+
+func (s *server) ListUoms(ctx context.Context, _ *emptypb.Empty) (*pb.ListUomsResponse, error) {
+	fmt.Println("list uoms request received")
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, apiURL+
+		"/uoms",
+		nil)
+	if err != nil {
+		return nil, fmt.Errorf("new request error: %w", err)
+	}
+
+	// send request
+	resp, err := apiClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("do request error: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("api returned non-success status code %d", resp.StatusCode)
+	}
+
+	// decode response body
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read all error: %w", err)
+	}
+	listResp := pb.ListUomsResponse{}
+	if err := unmarshalOptions.Unmarshal(respBody, &listResp); err != nil {
+		return nil, fmt.Errorf("unmarshal error: %w", err)
+	}
+
+	return &listResp, nil
 }

@@ -112,8 +112,8 @@ message StationLookup {
 // A continuous series of datapoints indexed in time order.
 message Datastream {
   string _id = 1;
-  string name = 2;
-  string version_id = 3;
+  string version_id = 2;
+  string name = 3;
   string derivation_method = 4;
   repeated string derived_from_datastream_ids = 5;
 
@@ -127,4 +127,15 @@ message Datastream {
   repeated DatapointsConfigInstance datapoints_config_refd = 12;
 
   StationLookup station_lookup = 13;
+}
+
+// A quantity used as a standard of measurement.
+message Uom {
+  string _id = 1;
+  string version_id = 2;
+  string som_id = 3;
+  repeated string convertible_to_uom_ids = 4;
+  repeated string unit_tags = 5;
+
+  google.protobuf.Struct library_config = 6;
 }

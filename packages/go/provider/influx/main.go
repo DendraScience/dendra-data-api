@@ -14,6 +14,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"strconv"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -26,7 +27,6 @@ import (
 )
 
 var (
-	port    = flag.Int("port", 50051, "The server port")
 	drivers = map[string]types.Driver{}
 )
 
@@ -40,7 +40,11 @@ func main() {
 	drivers["/influx/select"] = influxql.NewDriver()
 
 	// set up server
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	port, err := strconv.Atoi(os.Getenv("PORT"))
+	if err != nil {
+		port = 50051
+	}
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v\n", err)
 	}

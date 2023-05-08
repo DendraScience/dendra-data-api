@@ -111,7 +111,7 @@ class Datastream(_message.Message):
     name: str
     station_lookup: StationLookup
     version_id: str
-    def __init__(self, _id: _Optional[str] = ..., name: _Optional[str] = ..., version_id: _Optional[str] = ..., derivation_method: _Optional[str] = ..., derived_from_datastream_ids: _Optional[_Iterable[str]] = ..., datapoints_config: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_built: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_refd: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., station_lookup: _Optional[_Union[StationLookup, _Mapping]] = ...) -> None: ...
+    def __init__(self, _id: _Optional[str] = ..., version_id: _Optional[str] = ..., name: _Optional[str] = ..., derivation_method: _Optional[str] = ..., derived_from_datastream_ids: _Optional[_Iterable[str]] = ..., datapoints_config: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_built: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_refd: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., station_lookup: _Optional[_Union[StationLookup, _Mapping]] = ...) -> None: ...
 
 class EndTime(_message.Message):
     __slots__ = ["o", "t"]
@@ -126,3 +126,19 @@ class StationLookup(_message.Message):
     UTC_OFFSET_FIELD_NUMBER: _ClassVar[int]
     utc_offset: int
     def __init__(self, utc_offset: _Optional[int] = ...) -> None: ...
+
+class Uom(_message.Message):
+    __slots__ = ["_id", "convertible_to_uom_ids", "library_config", "som_id", "unit_tags", "version_id"]
+    CONVERTIBLE_TO_UOM_IDS_FIELD_NUMBER: _ClassVar[int]
+    LIBRARY_CONFIG_FIELD_NUMBER: _ClassVar[int]
+    SOM_ID_FIELD_NUMBER: _ClassVar[int]
+    UNIT_TAGS_FIELD_NUMBER: _ClassVar[int]
+    VERSION_ID_FIELD_NUMBER: _ClassVar[int]
+    _ID_FIELD_NUMBER: _ClassVar[int]
+    _id: str
+    convertible_to_uom_ids: _containers.RepeatedScalarFieldContainer[str]
+    library_config: _struct_pb2.Struct
+    som_id: str
+    unit_tags: _containers.RepeatedScalarFieldContainer[str]
+    version_id: str
+    def __init__(self, _id: _Optional[str] = ..., version_id: _Optional[str] = ..., som_id: _Optional[str] = ..., convertible_to_uom_ids: _Optional[_Iterable[str]] = ..., unit_tags: _Optional[_Iterable[str]] = ..., library_config: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ...) -> None: ...

@@ -2,6 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from v3 import metadata_pb2 as v3_dot_metadata__pb2
 
 
@@ -19,12 +20,23 @@ class MetadataServiceStub(object):
                 request_serializer=v3_dot_metadata__pb2.GetDatastreamRequest.SerializeToString,
                 response_deserializer=v3_dot_metadata__pb2.GetDatastreamResponse.FromString,
                 )
+        self.ListUoms = channel.unary_unary(
+                '/v3.MetadataService/ListUoms',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=v3_dot_metadata__pb2.ListUomsResponse.FromString,
+                )
 
 
 class MetadataServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetDatastream(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListUoms(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -37,6 +49,11 @@ def add_MetadataServiceServicer_to_server(servicer, server):
                     servicer.GetDatastream,
                     request_deserializer=v3_dot_metadata__pb2.GetDatastreamRequest.FromString,
                     response_serializer=v3_dot_metadata__pb2.GetDatastreamResponse.SerializeToString,
+            ),
+            'ListUoms': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListUoms,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=v3_dot_metadata__pb2.ListUomsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -62,5 +79,22 @@ class MetadataService(object):
         return grpc.experimental.unary_unary(request, target, '/v3.MetadataService/GetDatastream',
             v3_dot_metadata__pb2.GetDatastreamRequest.SerializeToString,
             v3_dot_metadata__pb2.GetDatastreamResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListUoms(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/v3.MetadataService/ListUoms',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            v3_dot_metadata__pb2.ListUomsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

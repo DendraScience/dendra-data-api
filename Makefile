@@ -1,5 +1,6 @@
 PROJECT_BASE := $(shell pwd)
 PROJECT_OUTPUT := $(PROJECT_BASE)/output
+PKG_CONVERTER_PINT := packages/python/converter/pint
 PKG_DATAPOINTS := packages/go/datapoints
 PKG_METADATA := packages/go/metadata
 PKG_PROVIDER_INFLUX := packages/go/provider/influx
@@ -10,8 +11,33 @@ print-vars:
 	@echo "Make vars..."
 	@echo PROJECT_BASE=$(PROJECT_BASE)
 	@echo PROJECT_OUTOUT=$(PROJECT_OUTPUT)
+	@echo PKG_CONVERTER_PINT=$(PKG_CONVERTER_PINT)
+	@echo PKG_DATAPOINTS=$(PKG_DATAPOINTS)
 	@echo PKG_METADATA=$(PKG_METADATA)
 	@echo PKG_PROVIDER_INFLUX=$(PKG_PROVIDER_INFLUX)
+
+
+##
+# converter-service-pint
+##
+
+.PHONY: converter-service-pint
+build-converter-pint: fmt-converter-pint
+	@echo "Skipping build"
+
+.PHONY: fmt-converter-pint
+fmt-converter-pint:
+	@echo "Running black..."
+	black $(PKG_CONVERTER_PINT)
+	@printf "\e[32mSuccess!\e[39m\n"
+
+.PHONY: run-converter-pint
+run-converter-pint: export PIPENV_PIPFILE=$(PKG_CONVERTER_PINT)/Pipfile
+run-converter-pint: export PIPENV_VENV_IN_PROJECT=$(PKG_CONVERTER_PINT)
+run-converter-pint: export PYTHONPATH=$(PROJECT_BASE)/release/python
+run-converter-pint: build-converter-pint
+	@echo "Running service..."
+	python3 -m pipenv run python3 $(PKG_CONVERTER_PINT)/main.py
 
 
 ##

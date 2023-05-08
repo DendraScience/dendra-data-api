@@ -12,9 +12,10 @@ _sym_db = _symbol_database.Default()
 
 
 from v3 import types_pb2 as v3_dot_types__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11v3/metadata.proto\x12\x02v3\x1a\x0ev3/types.proto\"-\n\x14GetDatastreamRequest\x12\x15\n\rdatastream_id\x18\x01 \x01(\t\";\n\x15GetDatastreamResponse\x12\"\n\ndatastream\x18\x01 \x01(\x0b\x32\x0e.v3.Datastream2Y\n\x0fMetadataService\x12\x46\n\rGetDatastream\x12\x18.v3.GetDatastreamRequest\x1a\x19.v3.GetDatastreamResponse\"\x00\x42\x38Z6github.com/dendrascience/dendra-data-api/release/go/v3b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11v3/metadata.proto\x12\x02v3\x1a\x0ev3/types.proto\x1a\x1bgoogle/protobuf/empty.proto\"-\n\x14GetDatastreamRequest\x12\x15\n\rdatastream_id\x18\x01 \x01(\t\";\n\x15GetDatastreamResponse\x12\"\n\ndatastream\x18\x01 \x01(\x0b\x32\x0e.v3.Datastream\"/\n\x10ListUomsResponse\x12\x1b\n\x04uoms\x18\x01 \x03(\x0b\x32\x07.v3.UomR\x04\x64\x61ta2\x95\x01\n\x0fMetadataService\x12\x46\n\rGetDatastream\x12\x18.v3.GetDatastreamRequest\x1a\x19.v3.GetDatastreamResponse\"\x00\x12:\n\x08ListUoms\x12\x16.google.protobuf.Empty\x1a\x14.v3.ListUomsResponse\"\x00\x42\x38Z6github.com/dendrascience/dendra-data-api/release/go/v3b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'v3.metadata_pb2', globals())
@@ -22,10 +23,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z6github.com/dendrascience/dendra-data-api/release/go/v3'
-  _GETDATASTREAMREQUEST._serialized_start=41
-  _GETDATASTREAMREQUEST._serialized_end=86
-  _GETDATASTREAMRESPONSE._serialized_start=88
-  _GETDATASTREAMRESPONSE._serialized_end=147
-  _METADATASERVICE._serialized_start=149
-  _METADATASERVICE._serialized_end=238
+  _GETDATASTREAMREQUEST._serialized_start=70
+  _GETDATASTREAMREQUEST._serialized_end=115
+  _GETDATASTREAMRESPONSE._serialized_start=117
+  _GETDATASTREAMRESPONSE._serialized_end=176
+  _LISTUOMSRESPONSE._serialized_start=178
+  _LISTUOMSRESPONSE._serialized_end=225
+  _METADATASERVICE._serialized_start=228
+  _METADATASERVICE._serialized_end=377
 # @@protoc_insertion_point(module_scope)
