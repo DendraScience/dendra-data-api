@@ -1,4 +1,5 @@
 import asyncio
+import concurrent.futures
 import logging
 import os
 
@@ -25,10 +26,27 @@ class ConverterService(converter_pb2_grpc.ConverterServiceServicer):
         context: grpc.aio.ServicerContext,
     ) -> converter_pb2.ConvertManyResponse:
         logging.info("convert many request received")
-        return converter_pb2.ConvertManyResponse(datapoints=[])
+
+        loop = asyncio.get_running_loop()
+
+        def convert(datapoints):
+            for datapoint in datapoints:
+                # DEBUG: same value conversion
+                datapoint.uv = datapoint.v
+            return datapoints
+
+        # TODO: init pint using from/to_unit, pass to convert
+        # TODO: configure pool
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            datapoints = await loop.run_in_executor(
+                executor, convert, request.datapoints
+            )
+
+        return converter_pb2.ConvertManyResponse(datapoints=datapoints)
 
 
-async def fetchUoms() -> None:
+# TODO: schedule this to occur periodically
+async def fetch_uoms() -> None:
     logging.info("fetching uoms...")
     addr = os.environ.get("METADATA_SERVICE")
 
@@ -37,9 +55,9 @@ async def fetchUoms() -> None:
         stub = metadata_pb2_grpc.MetadataServiceStub(channel)
         response = await stub.ListUoms(empty_pb2.Empty())
 
-    # DEBUG
-    print("list uoms response: {}".format(response.uoms))
     uoms = response.uoms
+    logging.info("cached (%d) uoms", len(uoms))
+    # TODO: init index/map for lookup?
 
 
 async def serve() -> None:
@@ -71,7 +89,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(fetchUoms())
+        loop.run_until_complete(fetch_uoms())
         loop.run_until_complete(serve())
     except KeyboardInterrupt as e:
         print("caught keyboard interrupt")

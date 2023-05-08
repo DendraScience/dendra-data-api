@@ -35,9 +35,9 @@ type ConnectedClient[T any] struct {
 }
 
 var (
-	// port      = 50051
-	metadata  *ConnectedClient[pb.MetadataServiceClient]
-	providers map[string]*ConnectedClient[pb.ProviderServiceClient]
+	metadata   *ConnectedClient[pb.MetadataServiceClient]
+	providers  map[string]*ConnectedClient[pb.ProviderServiceClient]
+	converters map[string]*ConnectedClient[pb.ConverterServiceClient]
 )
 
 func dialClient[T any](envName string) *ConnectedClient[T] {
@@ -111,7 +111,12 @@ func main() {
 		provider.client = pb.NewProviderServiceClient(provider.conn)
 	}
 
-	// TODO: set up connections to converter clients
+	// set up connections to converter clients
+	converters = dialClients[pb.ConverterServiceClient]("CONVERTER_SERVICES", "CONVERTER_SERVICE_")
+	for _, converter := range converters {
+		defer converter.conn.Close()
+		converter.client = pb.NewConverterServiceClient(converter.conn)
+	}
 
 	// TODO: set up connections to transformer clients
 
@@ -166,6 +171,7 @@ func (s *server) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.Da
 	log.Printf("get datasteam response: %v\n", getDatastreamResp)
 
 	datastream := getDatastreamResp.GetDatastream()
+	convert := request.GetConvert()
 	query := request.GetQuery()
 	config := types.MergeConfig(datastream, !query.GetSortAsc())
 	queryInterval := queryIntervalFromQuery(query, datastream)
@@ -173,6 +179,29 @@ func (s *server) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.Da
 	// DEBUG
 	log.Printf("merged config: %v\n", config)
 	log.Printf("query interval: %v\n", queryInterval)
+
+	// resolve converter
+	var converter *ConnectedClient[pb.ConverterServiceClient]
+	convertLibrary := convert.GetLibrary()
+	if convertLibrary != "" {
+		conv, found := converters[strings.ToUpper(convertLibrary)]
+		if !found {
+			return fmt.Errorf("converter not valid %q", convertLibrary)
+		}
+		converter = conv
+
+		if convert.GetFromUnit() == "" {
+			// attempt to infer the from unit from metadata
+			unitTag := datastream.GetTermsInfo().GetUnitTag()
+			if unitTag == "" {
+				return types.ErrConvertFromEmpty
+			}
+			convert.FromUnit = unitTag
+		}
+		if convert.GetToUnit() == "" {
+			return types.ErrConvertToEmpty
+		}
+	}
 
 	for _, inst := range config {
 		// intersect intervals; skip querying if empty
@@ -221,17 +250,31 @@ func (s *server) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.Da
 				break
 			}
 			if err != nil {
-				log.Fatalf("stream datapoints receive error: %v", err)
+				return fmt.Errorf("stream datapoints receive error: %w", err)
 			}
 
-			// TODO: add transformer and converter calls here
+			datapoints := providerResp.GetDatapoints()
+
+			// TODO: add transformer calls here
+
+			if converter != nil {
+				converterResp, err := converter.client.ConvertMany(ctx, &pb.ConvertManyRequest{
+					Convert:    convert,
+					Datapoints: datapoints,
+				})
+				if err != nil {
+					return fmt.Errorf("convert many error: %w", err)
+				}
+				datapoints = converterResp.GetDatapoints()
+			}
+
 			// TODO: handle limit
 			// TODO: handle time shifting and offset (in provider?)
 
-			resp := pb.StreamDatapointsResponse{Datapoints: providerResp.GetDatapoints()}
+			resp := pb.StreamDatapointsResponse{Datapoints: datapoints}
 			err = srv.Send(&resp)
 			if err != nil {
-				return fmt.Errorf("stream datapoints send error: %v", err)
+				return fmt.Errorf("stream datapoints send error: %w", err)
 			}
 		}
 	}

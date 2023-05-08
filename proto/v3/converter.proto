@@ -16,9 +16,8 @@ service ConverterService {
 }
 
 message ConvertManyRequest {
-  string from_unit = 1;
-  string to_unit = 2;
-  repeated Datapoint datapoints = 3;
+  ConvertArgs convert = 1;
+  repeated Datapoint datapoints = 2;
 }
 
 message ConvertManyResponse {

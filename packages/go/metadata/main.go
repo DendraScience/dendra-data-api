@@ -32,7 +32,18 @@ var (
 	apiClient = http.Client{
 		Timeout: time.Second * 20,
 	}
-	apiURL           string
+	apiURL             string
+	getDatastreamQuery = "?$select%5B%5D=_id" +
+		"&$select%5B%5D=datapoints_config" +
+		"&$select%5B%5D=datapoints_config_built" +
+		"&$select%5B%5D=datapoints_config_refd" +
+		"&$select%5B%5D=derivation_method" +
+		"&$select%5B%5D=derived_from_datastream_ids" +
+		"&$select%5B%5D=name" +
+		"&$select%5B%5D=station_lookup" +
+		"&$select%5B%5D=terms" +
+		"&$select%5B%5D=terms_info" +
+		"&$select%5B%5D=version_id"
 	unmarshalOptions = protojson.UnmarshalOptions{
 		DiscardUnknown: true,
 	}
@@ -92,8 +103,7 @@ func (s *server) GetDatastream(ctx context.Context, request *pb.GetDatastreamReq
 	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, apiURL+
 		"/datastreams/"+
-		request.GetDatastreamId()+
-		"?$select%5B%5D=_id&$select%5B%5D=name&$select%5B%5D=version_id&$select%5B%5D=derivation_method&$select%5B%5D=derived_from_datastream_ids&$select%5B%5D=datapoints_config&$select%5B%5D=datapoints_config_built&$select%5B%5D=datapoints_config_refd&$select%5B%5D=station_lookup",
+		request.GetDatastreamId()+getDatastreamQuery,
 		nil)
 	if err != nil {
 		return nil, fmt.Errorf("new request error: %w", err)

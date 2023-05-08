@@ -7,14 +7,12 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class ConvertManyRequest(_message.Message):
-    __slots__ = ["datapoints", "from_unit", "to_unit"]
+    __slots__ = ["convert", "datapoints"]
+    CONVERT_FIELD_NUMBER: _ClassVar[int]
     DATAPOINTS_FIELD_NUMBER: _ClassVar[int]
-    FROM_UNIT_FIELD_NUMBER: _ClassVar[int]
-    TO_UNIT_FIELD_NUMBER: _ClassVar[int]
+    convert: _types_pb2.ConvertArgs
     datapoints: _containers.RepeatedCompositeFieldContainer[_types_pb2.Datapoint]
-    from_unit: str
-    to_unit: str
-    def __init__(self, from_unit: _Optional[str] = ..., to_unit: _Optional[str] = ..., datapoints: _Optional[_Iterable[_Union[_types_pb2.Datapoint, _Mapping]]] = ...) -> None: ...
+    def __init__(self, convert: _Optional[_Union[_types_pb2.ConvertArgs, _Mapping]] = ..., datapoints: _Optional[_Iterable[_Union[_types_pb2.Datapoint, _Mapping]]] = ...) -> None: ...
 
 class ConvertManyResponse(_message.Message):
     __slots__ = ["datapoints"]

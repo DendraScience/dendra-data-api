@@ -73,7 +73,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.v3.ConvertManyRequest.repeatedFields_ = [3];
+proto.v3.ConvertManyRequest.repeatedFields_ = [2];
 
 
 
@@ -106,8 +106,7 @@ proto.v3.ConvertManyRequest.prototype.toObject = function(opt_includeInstance) {
  */
 proto.v3.ConvertManyRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    fromUnit: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    toUnit: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    convert: (f = msg.getConvert()) && v3_types_pb.ConvertArgs.toObject(includeInstance, f),
     datapointsList: jspb.Message.toObjectList(msg.getDatapointsList(),
     v3_types_pb.Datapoint.toObject, includeInstance)
   };
@@ -147,14 +146,11 @@ proto.v3.ConvertManyRequest.deserializeBinaryFromReader = function(msg, reader) 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setFromUnit(value);
+      var value = new v3_types_pb.ConvertArgs;
+      reader.readMessage(value,v3_types_pb.ConvertArgs.deserializeBinaryFromReader);
+      msg.setConvert(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setToUnit(value);
-      break;
-    case 3:
       var value = new v3_types_pb.Datapoint;
       reader.readMessage(value,v3_types_pb.Datapoint.deserializeBinaryFromReader);
       msg.addDatapoints(value);
@@ -188,24 +184,18 @@ proto.v3.ConvertManyRequest.prototype.serializeBinary = function() {
  */
 proto.v3.ConvertManyRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getFromUnit();
-  if (f.length > 0) {
-    writer.writeString(
+  f = message.getConvert();
+  if (f != null) {
+    writer.writeMessage(
       1,
-      f
-    );
-  }
-  f = message.getToUnit();
-  if (f.length > 0) {
-    writer.writeString(
-      2,
-      f
+      f,
+      v3_types_pb.ConvertArgs.serializeBinaryToWriter
     );
   }
   f = message.getDatapointsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      3,
+      2,
       f,
       v3_types_pb.Datapoint.serializeBinaryToWriter
     );
@@ -214,48 +204,49 @@ proto.v3.ConvertManyRequest.serializeBinaryToWriter = function(message, writer) 
 
 
 /**
- * optional string from_unit = 1;
- * @return {string}
+ * optional ConvertArgs convert = 1;
+ * @return {?proto.v3.ConvertArgs}
  */
-proto.v3.ConvertManyRequest.prototype.getFromUnit = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.v3.ConvertManyRequest.prototype.getConvert = function() {
+  return /** @type{?proto.v3.ConvertArgs} */ (
+    jspb.Message.getWrapperField(this, v3_types_pb.ConvertArgs, 1));
 };
 
 
 /**
- * @param {string} value
+ * @param {?proto.v3.ConvertArgs|undefined} value
+ * @return {!proto.v3.ConvertManyRequest} returns this
+*/
+proto.v3.ConvertManyRequest.prototype.setConvert = function(value) {
+  return jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
  * @return {!proto.v3.ConvertManyRequest} returns this
  */
-proto.v3.ConvertManyRequest.prototype.setFromUnit = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+proto.v3.ConvertManyRequest.prototype.clearConvert = function() {
+  return this.setConvert(undefined);
 };
 
 
 /**
- * optional string to_unit = 2;
- * @return {string}
+ * Returns whether this field is set.
+ * @return {boolean}
  */
-proto.v3.ConvertManyRequest.prototype.getToUnit = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+proto.v3.ConvertManyRequest.prototype.hasConvert = function() {
+  return jspb.Message.getField(this, 1) != null;
 };
 
 
 /**
- * @param {string} value
- * @return {!proto.v3.ConvertManyRequest} returns this
- */
-proto.v3.ConvertManyRequest.prototype.setToUnit = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
-};
-
-
-/**
- * repeated Datapoint datapoints = 3;
+ * repeated Datapoint datapoints = 2;
  * @return {!Array<!proto.v3.Datapoint>}
  */
 proto.v3.ConvertManyRequest.prototype.getDatapointsList = function() {
   return /** @type{!Array<!proto.v3.Datapoint>} */ (
-    jspb.Message.getRepeatedWrapperField(this, v3_types_pb.Datapoint, 3));
+    jspb.Message.getRepeatedWrapperField(this, v3_types_pb.Datapoint, 2));
 };
 
 
@@ -264,7 +255,7 @@ proto.v3.ConvertManyRequest.prototype.getDatapointsList = function() {
  * @return {!proto.v3.ConvertManyRequest} returns this
 */
 proto.v3.ConvertManyRequest.prototype.setDatapointsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 3, value);
+  return jspb.Message.setRepeatedWrapperField(this, 2, value);
 };
 
 
@@ -274,7 +265,7 @@ proto.v3.ConvertManyRequest.prototype.setDatapointsList = function(value) {
  * @return {!proto.v3.Datapoint}
  */
 proto.v3.ConvertManyRequest.prototype.addDatapoints = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 3, opt_value, proto.v3.Datapoint, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 2, opt_value, proto.v3.Datapoint, opt_index);
 };
 
 

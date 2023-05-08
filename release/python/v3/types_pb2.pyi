@@ -19,6 +19,16 @@ class AnnotationActions(_message.Message):
     flag: _containers.RepeatedScalarFieldContainer[str]
     def __init__(self, attrib: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., evaluate: _Optional[str] = ..., exclude: bool = ..., flag: _Optional[_Iterable[str]] = ...) -> None: ...
 
+class ConvertArgs(_message.Message):
+    __slots__ = ["from_unit", "library", "to_unit"]
+    FROM_UNIT_FIELD_NUMBER: _ClassVar[int]
+    LIBRARY_FIELD_NUMBER: _ClassVar[int]
+    TO_UNIT_FIELD_NUMBER: _ClassVar[int]
+    from_unit: str
+    library: str
+    to_unit: str
+    def __init__(self, from_unit: _Optional[str] = ..., to_unit: _Optional[str] = ..., library: _Optional[str] = ...) -> None: ...
+
 class Datapoint(_message.Message):
     __slots__ = ["d", "da", "et", "g", "gc", "lt", "o", "q", "t", "ti", "uv", "v", "va"]
     DA_FIELD_NUMBER: _ClassVar[int]
@@ -92,7 +102,7 @@ class DatapointsQuery(_message.Message):
     def __init__(self, sort_asc: bool = ..., limit: _Optional[int] = ..., lt_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., gt_time: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., lt_equal: bool = ..., gt_equal: bool = ..., is_local: bool = ..., lat: _Optional[float] = ..., lon: _Optional[float] = ...) -> None: ...
 
 class Datastream(_message.Message):
-    __slots__ = ["_id", "datapoints_config", "datapoints_config_built", "datapoints_config_refd", "derivation_method", "derived_from_datastream_ids", "name", "station_lookup", "version_id"]
+    __slots__ = ["_id", "datapoints_config", "datapoints_config_built", "datapoints_config_refd", "derivation_method", "derived_from_datastream_ids", "name", "station_lookup", "terms", "terms_info", "version_id"]
     DATAPOINTS_CONFIG_BUILT_FIELD_NUMBER: _ClassVar[int]
     DATAPOINTS_CONFIG_FIELD_NUMBER: _ClassVar[int]
     DATAPOINTS_CONFIG_REFD_FIELD_NUMBER: _ClassVar[int]
@@ -100,6 +110,8 @@ class Datastream(_message.Message):
     DERIVED_FROM_DATASTREAM_IDS_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     STATION_LOOKUP_FIELD_NUMBER: _ClassVar[int]
+    TERMS_FIELD_NUMBER: _ClassVar[int]
+    TERMS_INFO_FIELD_NUMBER: _ClassVar[int]
     VERSION_ID_FIELD_NUMBER: _ClassVar[int]
     _ID_FIELD_NUMBER: _ClassVar[int]
     _id: str
@@ -110,8 +122,10 @@ class Datastream(_message.Message):
     derived_from_datastream_ids: _containers.RepeatedScalarFieldContainer[str]
     name: str
     station_lookup: StationLookup
+    terms: _struct_pb2.Struct
+    terms_info: TermsInfo
     version_id: str
-    def __init__(self, _id: _Optional[str] = ..., version_id: _Optional[str] = ..., name: _Optional[str] = ..., derivation_method: _Optional[str] = ..., derived_from_datastream_ids: _Optional[_Iterable[str]] = ..., datapoints_config: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_built: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_refd: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., station_lookup: _Optional[_Union[StationLookup, _Mapping]] = ...) -> None: ...
+    def __init__(self, _id: _Optional[str] = ..., version_id: _Optional[str] = ..., name: _Optional[str] = ..., derivation_method: _Optional[str] = ..., derived_from_datastream_ids: _Optional[_Iterable[str]] = ..., datapoints_config: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_built: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., datapoints_config_refd: _Optional[_Iterable[_Union[DatapointsConfigInstance, _Mapping]]] = ..., station_lookup: _Optional[_Union[StationLookup, _Mapping]] = ..., terms: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., terms_info: _Optional[_Union[TermsInfo, _Mapping]] = ...) -> None: ...
 
 class EndTime(_message.Message):
     __slots__ = ["o", "t"]
@@ -126,6 +140,16 @@ class StationLookup(_message.Message):
     UTC_OFFSET_FIELD_NUMBER: _ClassVar[int]
     utc_offset: int
     def __init__(self, utc_offset: _Optional[int] = ...) -> None: ...
+
+class TermsInfo(_message.Message):
+    __slots__ = ["class_keys", "class_tags", "unit_tag"]
+    CLASS_KEYS_FIELD_NUMBER: _ClassVar[int]
+    CLASS_TAGS_FIELD_NUMBER: _ClassVar[int]
+    UNIT_TAG_FIELD_NUMBER: _ClassVar[int]
+    class_keys: _containers.RepeatedScalarFieldContainer[str]
+    class_tags: _containers.RepeatedScalarFieldContainer[str]
+    unit_tag: str
+    def __init__(self, class_keys: _Optional[_Iterable[str]] = ..., class_tags: _Optional[_Iterable[str]] = ..., unit_tag: _Optional[str] = ...) -> None: ...
 
 class Uom(_message.Message):
     __slots__ = ["_id", "convertible_to_uom_ids", "library_config", "som_id", "unit_tags", "version_id"]

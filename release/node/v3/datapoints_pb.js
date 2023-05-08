@@ -100,7 +100,8 @@ proto.v3.StreamDatapointsRequest.prototype.toObject = function(opt_includeInstan
 proto.v3.StreamDatapointsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     datastreamId: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    query: (f = msg.getQuery()) && v3_types_pb.DatapointsQuery.toObject(includeInstance, f)
+    query: (f = msg.getQuery()) && v3_types_pb.DatapointsQuery.toObject(includeInstance, f),
+    convert: (f = msg.getConvert()) && v3_types_pb.ConvertArgs.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -146,6 +147,11 @@ proto.v3.StreamDatapointsRequest.deserializeBinaryFromReader = function(msg, rea
       reader.readMessage(value,v3_types_pb.DatapointsQuery.deserializeBinaryFromReader);
       msg.setQuery(value);
       break;
+    case 3:
+      var value = new v3_types_pb.ConvertArgs;
+      reader.readMessage(value,v3_types_pb.ConvertArgs.deserializeBinaryFromReader);
+      msg.setConvert(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -188,6 +194,14 @@ proto.v3.StreamDatapointsRequest.serializeBinaryToWriter = function(message, wri
       2,
       f,
       v3_types_pb.DatapointsQuery.serializeBinaryToWriter
+    );
+  }
+  f = message.getConvert();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      v3_types_pb.ConvertArgs.serializeBinaryToWriter
     );
   }
 };
@@ -245,6 +259,43 @@ proto.v3.StreamDatapointsRequest.prototype.clearQuery = function() {
  */
 proto.v3.StreamDatapointsRequest.prototype.hasQuery = function() {
   return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional ConvertArgs convert = 3;
+ * @return {?proto.v3.ConvertArgs}
+ */
+proto.v3.StreamDatapointsRequest.prototype.getConvert = function() {
+  return /** @type{?proto.v3.ConvertArgs} */ (
+    jspb.Message.getWrapperField(this, v3_types_pb.ConvertArgs, 3));
+};
+
+
+/**
+ * @param {?proto.v3.ConvertArgs|undefined} value
+ * @return {!proto.v3.StreamDatapointsRequest} returns this
+*/
+proto.v3.StreamDatapointsRequest.prototype.setConvert = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.v3.StreamDatapointsRequest} returns this
+ */
+proto.v3.StreamDatapointsRequest.prototype.clearConvert = function() {
+  return this.setConvert(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.v3.StreamDatapointsRequest.prototype.hasConvert = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 

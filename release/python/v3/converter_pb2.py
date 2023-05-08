@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from v3 import types_pb2 as v3_dot_types__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12v3/converter.proto\x12\x02v3\x1a\x0ev3/types.proto\"[\n\x12\x43onvertManyRequest\x12\x11\n\tfrom_unit\x18\x01 \x01(\t\x12\x0f\n\x07to_unit\x18\x02 \x01(\t\x12!\n\ndatapoints\x18\x03 \x03(\x0b\x32\r.v3.Datapoint\"8\n\x13\x43onvertManyResponse\x12!\n\ndatapoints\x18\x01 \x03(\x0b\x32\r.v3.Datapoint2T\n\x10\x43onverterService\x12@\n\x0b\x43onvertMany\x12\x16.v3.ConvertManyRequest\x1a\x17.v3.ConvertManyResponse\"\x00\x42\x38Z6github.com/dendrascience/dendra-data-api/release/go/v3b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12v3/converter.proto\x12\x02v3\x1a\x0ev3/types.proto\"Y\n\x12\x43onvertManyRequest\x12 \n\x07\x63onvert\x18\x01 \x01(\x0b\x32\x0f.v3.ConvertArgs\x12!\n\ndatapoints\x18\x02 \x03(\x0b\x32\r.v3.Datapoint\"8\n\x13\x43onvertManyResponse\x12!\n\ndatapoints\x18\x01 \x03(\x0b\x32\r.v3.Datapoint2T\n\x10\x43onverterService\x12@\n\x0b\x43onvertMany\x12\x16.v3.ConvertManyRequest\x1a\x17.v3.ConvertManyResponse\"\x00\x42\x38Z6github.com/dendrascience/dendra-data-api/release/go/v3b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'v3.converter_pb2', globals())
@@ -23,9 +23,9 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z6github.com/dendrascience/dendra-data-api/release/go/v3'
   _CONVERTMANYREQUEST._serialized_start=42
-  _CONVERTMANYREQUEST._serialized_end=133
-  _CONVERTMANYRESPONSE._serialized_start=135
-  _CONVERTMANYRESPONSE._serialized_end=191
-  _CONVERTERSERVICE._serialized_start=193
-  _CONVERTERSERVICE._serialized_end=277
+  _CONVERTMANYREQUEST._serialized_end=131
+  _CONVERTMANYRESPONSE._serialized_start=133
+  _CONVERTMANYRESPONSE._serialized_end=189
+  _CONVERTERSERVICE._serialized_start=191
+  _CONVERTERSERVICE._serialized_end=275
 # @@protoc_insertion_point(module_scope)

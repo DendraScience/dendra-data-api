@@ -72,6 +72,12 @@ message AnnotationActions {
   repeated string flag = 4;
 }
 
+message ConvertArgs {
+  string from_unit = 1;
+  string to_unit = 2;
+  string library = 3;
+}
+
 // User-defined service configuration for fetching datapoints
 message DatapointsConfigInstance {
   optional google.protobuf.Timestamp begins_at = 1;
@@ -109,6 +115,12 @@ message StationLookup {
   sint32 utc_offset = 1;
 }
 
+message TermsInfo {
+  repeated string class_keys = 1;
+  repeated string class_tags = 2;
+  string unit_tag = 3;
+}
+
 // A continuous series of datapoints indexed in time order.
 message Datastream {
   string _id = 1;
@@ -122,11 +134,16 @@ message Datastream {
   // RESERVED 8
   // RESERVED 9
 
+  // TODO: Need uom_id or unit_tag for from_unit
+  // TODO: Update metadata service
+
   repeated DatapointsConfigInstance datapoints_config = 10;
   repeated DatapointsConfigInstance datapoints_config_built = 11;
   repeated DatapointsConfigInstance datapoints_config_refd = 12;
 
   StationLookup station_lookup = 13;
+  google.protobuf.Struct terms = 14;
+  TermsInfo terms_info = 15;
 }
 
 // A quantity used as a standard of measurement.
