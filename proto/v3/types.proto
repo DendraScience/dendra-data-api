@@ -7,13 +7,17 @@ option go_package = "github.com/dendrascience/dendra-data-api/release/go/v3";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
 
-// An end time object for observations that span a period of time
-message EndTime {
-  // The datapoint's timestamp in UTC
-  google.protobuf.Timestamp t = 1;
+message AnnotationActions {
+  google.protobuf.Struct attrib = 1;
+  string evaluate = 2;
+  bool exclude = 3;
+  repeated string flag = 4;
+}
 
-  // An offset in seconds between the time zone and UTC
-  sint32 o = 2;
+message ConvertArgs {
+  string from_unit = 1;
+  string to_unit = 2;
+  string library = 3;
 }
 
 // An individual time series observation in a datastream
@@ -52,7 +56,7 @@ message Datapoint {
   repeated double gc = 11;
 
   // Data quality information
-  google.protobuf.Struct q = 12;
+  DatapointQuality q = 12;
 
   // RESERVED 13
   // RESERVED 14
@@ -65,17 +69,10 @@ message Datapoint {
   EndTime et = 17;
 }
 
-message AnnotationActions {
+message DatapointQuality {
   google.protobuf.Struct attrib = 1;
-  string evaluate = 2;
-  bool exclude = 3;
-  repeated string flag = 4;
-}
-
-message ConvertArgs {
-  string from_unit = 1;
-  string to_unit = 2;
-  string library = 3;
+  repeated string flag = 2;
+  repeated string annotation_ids = 3;
 }
 
 // User-defined service configuration for fetching datapoints
@@ -111,16 +108,6 @@ message DatapointsQuery {
   optional double lon = 9;
 }
 
-message StationLookup {
-  sint32 utc_offset = 1;
-}
-
-message TermsInfo {
-  repeated string class_keys = 1;
-  repeated string class_tags = 2;
-  string unit_tag = 3;
-}
-
 // A continuous series of datapoints indexed in time order.
 message Datastream {
   string _id = 1;
@@ -144,6 +131,29 @@ message Datastream {
   StationLookup station_lookup = 13;
   google.protobuf.Struct terms = 14;
   TermsInfo terms_info = 15;
+}
+
+// An end time object for observations that span a period of time
+message EndTime {
+  // The datapoint's timestamp in UTC
+  google.protobuf.Timestamp t = 1;
+
+  // An offset in seconds between the time zone and UTC
+  sint32 o = 2;
+}
+
+message StationLookup {
+  sint32 utc_offset = 1;
+}
+
+message TermsInfo {
+  repeated string class_keys = 1;
+  repeated string class_tags = 2;
+  string unit_tag = 3;
+}
+
+message TransformArgs {
+  string expression = 1;
 }
 
 // A quantity used as a standard of measurement.

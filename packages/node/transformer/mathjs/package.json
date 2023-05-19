@@ -1,0 +1,49 @@
+{
+  "name": "transformer-service-mathjs",
+  "version": "0.0.0",
+  "description": "Dendra gRPC Transformer Service for MathJS.",
+  "license": "BSD-3-Clause",
+  "author": "J. Scott Smith <scott@newleafsolutionsinc.com>",
+  "main": "src/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DendraScience/dendra-data-api.git"
+  },
+  "scripts": {
+    "build": "npm run lint",
+    "dev": "npx nodemon --watch src --delay 1 --exec \"npm run build && npm run start\"",
+    "fix": "eslint src --fix",
+    "fix-test": "eslint test --fix",
+    "fmt": "npx prettier --write src/",
+    "fmt-test": "npx prettier --write test/",
+    "lint": "eslint src && npx prettier --check src/",
+    "lint-test": "eslint test && npx prettier --check test/",
+    "start": "node src/main.js",
+    "test": "npm run lint-test && NODE_ENV=test mocha test --recursive --use_strict"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18.12"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.8.14",
+    "google-protobuf": "^3.21.2",
+    "grpc-server-reflection": "^0.1.5",
+    "mathjs": "^11.8.0",
+    "pino": "^8.14.1",
+    "poolifier": "^2.4.14"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "mocha": "^10.2.0",
+    "prettier": "2.7.1"
+  }
+}

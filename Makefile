@@ -4,6 +4,7 @@ PKG_CONVERTER_PINT := packages/python/converter/pint
 PKG_DATAPOINTS := packages/go/datapoints
 PKG_METADATA := packages/go/metadata
 PKG_PROVIDER_INFLUX := packages/go/provider/influx
+PKG_TRANSFORMER_MATHJS := packages/node/transformer/mathjs
 
 main: print-vars build-datapoints build-metadata build-provider-influx
 
@@ -15,13 +16,14 @@ print-vars:
 	@echo PKG_DATAPOINTS=$(PKG_DATAPOINTS)
 	@echo PKG_METADATA=$(PKG_METADATA)
 	@echo PKG_PROVIDER_INFLUX=$(PKG_PROVIDER_INFLUX)
+	@echo PKG_TRANSFORMER_MATHJS=$(PKG_TRANSFORMER_MATHJS)
 
 
 ##
 # converter-service-pint
 ##
 
-.PHONY: converter-service-pint
+.PHONY: build-converter-pint
 build-converter-pint: fmt-converter-pint
 	@echo "Skipping build"
 
@@ -107,6 +109,29 @@ run-provider-influx: build-provider-influx
 
 
 ##
+# transformer-service-mathjs
+##
+
+.PHONY: build-transformer-mathjs
+build-transformer-mathjs: fmt-transformer-mathjs
+	@echo "Running npm run build..."
+	npm run --prefix $(PKG_TRANSFORMER_MATHJS) build
+	@printf "\e[32mSuccess!\e[39m\n"
+
+.PHONY: fmt-transformer-mathjs
+fmt-transformer-mathjs:
+	@echo "Running npm run fmt..."
+	npm run --prefix $(PKG_TRANSFORMER_MATHJS) fmt
+	@printf "\e[32mSuccess!\e[39m\n"
+
+.PHONY: run-transformer-mathjs
+run-transformer-mathjs: export NODE_PATH=$(PROJECT_BASE)/$(PKG_TRANSFORMER_MATHJS)/node_modules
+run-transformer-mathjs: build-transformer-mathjs
+	@echo "Running service..."
+	npm run --prefix $(PKG_TRANSFORMER_MATHJS) start
+
+
+##
 # protoc
 ##
 
@@ -130,12 +155,17 @@ protoc-go:
 
 # Requires https://github.com/grpc/grpc-node/tree/master/packages/grpc-tools
 # See also https://github.com/grpc/grpc/tree/v1.54.0/examples/node/static_codegen
+# See also https://github.com/AckeeCZ/grpc-server-reflection
 .PHONY: protoc-node
 protoc-node:
 	grpc_tools_node_protoc -I=proto \
 		--js_out=import_style=commonjs,binary:release/node \
 		--grpc_out=grpc_js:release/node \
 		proto/v3/*.proto
+	grpc_tools_node_protoc -I=proto \
+		--descriptor_set_out=release/node/descriptor_set.bin \
+		--include_imports \
+		proto/v3/transformer.proto proto/v3/types.proto
 
 # See https://grpc.io/docs/languages/python/quickstart/
 .PHONY: protoc-python

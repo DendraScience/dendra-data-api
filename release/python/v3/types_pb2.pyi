@@ -51,13 +51,23 @@ class Datapoint(_message.Message):
     gc: _containers.RepeatedScalarFieldContainer[float]
     lt: _timestamp_pb2.Timestamp
     o: int
-    q: _struct_pb2.Struct
+    q: DatapointQuality
     t: _timestamp_pb2.Timestamp
     ti: _struct_pb2.Struct
     uv: float
     v: float
     va: _containers.RepeatedScalarFieldContainer[float]
-    def __init__(self, t: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., o: _Optional[int] = ..., lt: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., d: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., da: _Optional[_Iterable[_Union[_struct_pb2.Struct, _Mapping]]] = ..., v: _Optional[float] = ..., va: _Optional[_Iterable[float]] = ..., uv: _Optional[float] = ..., g: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., gc: _Optional[_Iterable[float]] = ..., q: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., ti: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., et: _Optional[_Union[EndTime, _Mapping]] = ...) -> None: ...
+    def __init__(self, t: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., o: _Optional[int] = ..., lt: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., d: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., da: _Optional[_Iterable[_Union[_struct_pb2.Struct, _Mapping]]] = ..., v: _Optional[float] = ..., va: _Optional[_Iterable[float]] = ..., uv: _Optional[float] = ..., g: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., gc: _Optional[_Iterable[float]] = ..., q: _Optional[_Union[DatapointQuality, _Mapping]] = ..., ti: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., et: _Optional[_Union[EndTime, _Mapping]] = ...) -> None: ...
+
+class DatapointQuality(_message.Message):
+    __slots__ = ["annotation_ids", "attrib", "flag"]
+    ANNOTATION_IDS_FIELD_NUMBER: _ClassVar[int]
+    ATTRIB_FIELD_NUMBER: _ClassVar[int]
+    FLAG_FIELD_NUMBER: _ClassVar[int]
+    annotation_ids: _containers.RepeatedScalarFieldContainer[str]
+    attrib: _struct_pb2.Struct
+    flag: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, attrib: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., flag: _Optional[_Iterable[str]] = ..., annotation_ids: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class DatapointsConfigInstance(_message.Message):
     __slots__ = ["actions", "annotation_ids", "begins_at", "connection", "ends_before", "params", "path", "ref"]
@@ -150,6 +160,12 @@ class TermsInfo(_message.Message):
     class_tags: _containers.RepeatedScalarFieldContainer[str]
     unit_tag: str
     def __init__(self, class_keys: _Optional[_Iterable[str]] = ..., class_tags: _Optional[_Iterable[str]] = ..., unit_tag: _Optional[str] = ...) -> None: ...
+
+class TransformArgs(_message.Message):
+    __slots__ = ["expression"]
+    EXPRESSION_FIELD_NUMBER: _ClassVar[int]
+    expression: str
+    def __init__(self, expression: _Optional[str] = ...) -> None: ...
 
 class Uom(_message.Message):
     __slots__ = ["_id", "convertible_to_uom_ids", "library_config", "som_id", "unit_tags", "version_id"]

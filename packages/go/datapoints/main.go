@@ -29,15 +29,18 @@ import (
 	pb "github.com/dendrascience/dendra-data-api/release/go/v3"
 )
 
+const mathjs = "MATHJS"
+
 type ConnectedClient[T any] struct {
 	conn   *grpc.ClientConn
 	client T
 }
 
 var (
-	metadata   *ConnectedClient[pb.MetadataServiceClient]
-	providers  map[string]*ConnectedClient[pb.ProviderServiceClient]
-	converters map[string]*ConnectedClient[pb.ConverterServiceClient]
+	metadata     *ConnectedClient[pb.MetadataServiceClient]
+	providers    map[string]*ConnectedClient[pb.ProviderServiceClient]
+	transformers map[string]*ConnectedClient[pb.TransformerServiceClient]
+	converters   map[string]*ConnectedClient[pb.ConverterServiceClient]
 )
 
 func dialClient[T any](envName string) *ConnectedClient[T] {
@@ -111,14 +114,25 @@ func main() {
 		provider.client = pb.NewProviderServiceClient(provider.conn)
 	}
 
+	// set up connections to transformer clients
+	transformers = dialClients[pb.TransformerServiceClient]("TRANSFORMER_SERVICES", "TRANSFORMER_SERVICE_")
+	for _, transformer := range transformers {
+		defer transformer.conn.Close()
+		transformer.client = pb.NewTransformerServiceClient(transformer.conn)
+	}
+
+	// resolve mathjs transformer; required for "evaluate" actions
+	_, found := transformers[mathjs]
+	if !found {
+		log.Fatalf("mathjs transformer not configured")
+	}
+
 	// set up connections to converter clients
 	converters = dialClients[pb.ConverterServiceClient]("CONVERTER_SERVICES", "CONVERTER_SERVICE_")
 	for _, converter := range converters {
 		defer converter.conn.Close()
 		converter.client = pb.NewConverterServiceClient(converter.conn)
 	}
-
-	// TODO: set up connections to transformer clients
 
 	// set up server
 	port, err := strconv.Atoi(os.Getenv("PORT"))
@@ -179,6 +193,9 @@ func (s *server) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.Da
 	// DEBUG
 	log.Printf("merged config: %v\n", config)
 	log.Printf("query interval: %v\n", queryInterval)
+
+	// resolve mathjs transformer; required for "evaluate" actions
+	mathjsTransformer, _ := transformers[mathjs]
 
 	// resolve converter
 	var converter *ConnectedClient[pb.ConverterServiceClient]
@@ -244,6 +261,9 @@ func (s *server) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.Da
 			return fmt.Errorf("stream datapoints error: %w", err)
 		}
 
+		actions := inst.GetActions()
+		evaluate := actions.GetEvaluate()
+
 		for {
 			providerResp, err := stream.Recv()
 			if err == io.EOF {
@@ -255,7 +275,18 @@ func (s *server) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.Da
 
 			datapoints := providerResp.GetDatapoints()
 
-			// TODO: add transformer calls here
+			if evaluate != "" {
+				transformerResp, err := mathjsTransformer.client.TransformMany(ctx, &pb.TransformManyRequest{
+					Transform: &pb.TransformArgs{
+						Expression: evaluate,
+					},
+					Datapoints: datapoints,
+				})
+				if err != nil {
+					return fmt.Errorf("mathjs transform many error: %w", err)
+				}
+				datapoints = transformerResp.GetDatapoints()
+			}
 
 			if converter != nil {
 				converterResp, err := converter.client.ConvertMany(ctx, &pb.ConvertManyRequest{
@@ -268,8 +299,19 @@ func (s *server) StreamDatapoints(request *pb.StreamDatapointsRequest, srv pb.Da
 				datapoints = converterResp.GetDatapoints()
 			}
 
+			if actions != nil {
+				// merge annotation-quality metadata into datapoints
+				q := pb.DatapointQuality{
+					AnnotationIds: inst.GetAnnotationIds(),
+					Attrib:        actions.GetAttrib(),
+					Flag:          actions.GetFlag(),
+				}
+				for _, datapoint := range datapoints {
+					datapoint.Q = &q
+				}
+			}
+
 			// TODO: handle limit
-			// TODO: handle time shifting and offset (in provider?)
 
 			resp := pb.StreamDatapointsResponse{Datapoints: datapoints}
 			err = srv.Send(&resp)

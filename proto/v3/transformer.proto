@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package v3;
+
+option go_package = "github.com/dendrascience/dendra-data-api/release/go/v3";
+
+import "v3/types.proto";
+
+service TransformerService {
+  // NOTES:
+  // rpc TransformOne
+  // rpc TransformStream
+
+  rpc TransformMany (TransformManyRequest) returns (TransformManyResponse) {}
+}
+
+message TransformManyRequest {
+  TransformArgs transform = 1;
+  repeated Datapoint datapoints = 2;
+}
+
+message TransformManyResponse {
+  repeated Datapoint datapoints = 1;
+}
