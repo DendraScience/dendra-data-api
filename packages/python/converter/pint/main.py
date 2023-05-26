@@ -2,12 +2,14 @@ import asyncio
 import concurrent.futures
 import logging
 import os
+import pint
 
 # import pprint
 
 import grpc
 from grpc_reflection.v1alpha import reflection
 from google.protobuf import empty_pb2
+from google.protobuf import struct_pb2
 
 from v3 import converter_pb2
 from v3 import converter_pb2_grpc
@@ -16,7 +18,20 @@ from v3 import metadata_pb2_grpc
 # coroutines to be invoked when the event loop is shutting down
 _cleanup_coroutines = []
 
-uoms = None
+units_by_id = {}
+units_by_tag = {}
+ureg = pint.UnitRegistry()
+Q_ = ureg.Quantity
+
+
+# resolve input unit specifier to a pint unit
+def get_unit(key):
+    if key in units_by_tag:
+        return units_by_tag[key]
+    elif key in units_by_id:
+        return units_by_id[key]
+    else:
+        return ureg(key)
 
 
 class ConverterService(converter_pb2_grpc.ConverterServiceServicer):
@@ -27,19 +42,19 @@ class ConverterService(converter_pb2_grpc.ConverterServiceServicer):
     ) -> converter_pb2.ConvertManyResponse:
         logging.info("convert many request received")
 
+        from_unit = get_unit(request.convert.from_unit)
+        to_unit = get_unit(request.convert.to_unit)
         loop = asyncio.get_running_loop()
 
-        def convert(datapoints):
-            for datapoint in datapoints:
-                # DEBUG: same value conversion
-                datapoint.uv = datapoint.v
-            return datapoints
+        def convert(dps, f, t):
+            for dp in dps:
+                dp.uv = Q_(dp.v, f).to(t).magnitude
+            return dps
 
-        # TODO: init pint using from/to_unit, pass to convert
         # TODO: configure pool
         with concurrent.futures.ThreadPoolExecutor() as executor:
             datapoints = await loop.run_in_executor(
-                executor, convert, request.datapoints
+                executor, convert, request.datapoints, from_unit, to_unit
             )
 
         return converter_pb2.ConvertManyResponse(datapoints=datapoints)
@@ -55,9 +70,27 @@ async def fetch_uoms() -> None:
         stub = metadata_pb2_grpc.MetadataServiceStub(channel)
         response = await stub.ListUoms(empty_pb2.Empty())
 
-    uoms = response.uoms
-    logging.info("cached (%d) uoms", len(uoms))
-    # TODO: init index/map for lookup?
+    logging.info("received (%d) uoms", len(response.uoms))
+
+    for uom in response.uoms:
+        pint_struct = uom.library_config.get_or_create_struct("pint")
+        if "unit_name" in pint_struct and isinstance(pint_struct["unit_name"], str):
+            unit_name = pint_struct["unit_name"]
+            unit = None
+
+            try:
+                unit = ureg(unit_name)
+                logging.info("registered unit_name %s", unit_name)
+            except pint.errors.UndefinedUnitError as e:
+                logging.error("invalid unit_name %s", unit_name)
+                continue
+
+            units_by_id[uom._id] = unit
+            for tag in uom.unit_tags:
+                units_by_tag[tag] = unit
+
+    logging.info("loaded (%d) units_by_id", len(units_by_id))
+    logging.info("loaded (%d) units_by_tag", len(units_by_tag))
 
 
 async def serve() -> None:
@@ -92,7 +125,7 @@ if __name__ == "__main__":
         loop.run_until_complete(fetch_uoms())
         loop.run_until_complete(serve())
     except KeyboardInterrupt as e:
-        print("caught keyboard interrupt")
+        logging.info("caught keyboard interrupt")
     finally:
         loop.run_until_complete(*_cleanup_coroutines)
         loop.close()

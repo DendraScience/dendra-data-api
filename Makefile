@@ -20,6 +20,45 @@ print-vars:
 
 
 ##
+# setup
+##
+
+# IMPORTANT: Install Protocol Buffer Compiler beforehand
+# https://grpc.io/docs/protoc-installation/
+
+.PHONY: setup
+setup: setup-go setup-node setup-python
+
+# See https://grpc.io/docs/languages/go/quickstart/
+.PHONY: setup-go
+setup-go:
+	@echo "Installing required tools..."
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+	@printf "\e[32mSuccess!\e[39m\n"
+
+# See https://github.com/grpc/grpc-node/tree/master/packages/grpc-tools
+# See https://github.com/grpc/grpc/tree/v1.54.0/examples/node/static_codegen
+.PHONY: setup-node
+setup-node:
+	@echo "Installing required tools..."
+	npm install -g grpc-tools
+	@printf "\e[32mSuccess!\e[39m\n"
+
+# See https://pipenv.pypa.io/en/latest/
+# See https://black.readthedocs.io/en/stable/index.html
+# See https://grpc.io/docs/languages/python/quickstart/
+.PHONY: setup-python
+setup-python:
+	@echo "Installing required tools..."
+	pip3 install black
+	pip3 install grpcio
+	pip3 install grpcio-tools
+	pip3 install pipenv --user
+	@printf "\e[32mSuccess!\e[39m\n"
+
+
+##
 # converter-service-pint
 ##
 
@@ -31,6 +70,12 @@ build-converter-pint: fmt-converter-pint
 fmt-converter-pint:
 	@echo "Running black..."
 	black $(PKG_CONVERTER_PINT)
+	@printf "\e[32mSuccess!\e[39m\n"
+
+.PHONY: install-converter-pint
+install-converter-pint:
+	@echo "Installing dependencies..."
+	(cd $(PKG_CONVERTER_PINT) && python3 -m pipenv sync)
 	@printf "\e[32mSuccess!\e[39m\n"
 
 .PHONY: run-converter-pint
@@ -153,9 +198,7 @@ protoc-go:
 		--go-grpc_opt=paths=source_relative \
 		proto/v3/*.proto
 
-# Requires https://github.com/grpc/grpc-node/tree/master/packages/grpc-tools
-# See also https://github.com/grpc/grpc/tree/v1.54.0/examples/node/static_codegen
-# See also https://github.com/AckeeCZ/grpc-server-reflection
+# See https://github.com/AckeeCZ/grpc-server-reflection
 .PHONY: protoc-node
 protoc-node:
 	grpc_tools_node_protoc -I=proto \
@@ -167,7 +210,6 @@ protoc-node:
 		--include_imports \
 		proto/v3/transformer.proto proto/v3/types.proto
 
-# See https://grpc.io/docs/languages/python/quickstart/
 .PHONY: protoc-python
 protoc-python:
 	python3 -m grpc_tools.protoc -I=proto \
