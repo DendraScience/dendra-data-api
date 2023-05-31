@@ -6,6 +6,26 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class StreamAggregatesRequest(_message.Message):
+    __slots__ = ["bucket_width", "convert", "count_only", "datastream_id", "query"]
+    BUCKET_WIDTH_FIELD_NUMBER: _ClassVar[int]
+    CONVERT_FIELD_NUMBER: _ClassVar[int]
+    COUNT_ONLY_FIELD_NUMBER: _ClassVar[int]
+    DATASTREAM_ID_FIELD_NUMBER: _ClassVar[int]
+    QUERY_FIELD_NUMBER: _ClassVar[int]
+    bucket_width: str
+    convert: _types_pb2.ConvertArgs
+    count_only: bool
+    datastream_id: str
+    query: _types_pb2.DatapointsQuery
+    def __init__(self, datastream_id: _Optional[str] = ..., query: _Optional[_Union[_types_pb2.DatapointsQuery, _Mapping]] = ..., convert: _Optional[_Union[_types_pb2.ConvertArgs, _Mapping]] = ..., bucket_width: _Optional[str] = ..., count_only: bool = ...) -> None: ...
+
+class StreamAggregatesResponse(_message.Message):
+    __slots__ = ["aggregates"]
+    AGGREGATES_FIELD_NUMBER: _ClassVar[int]
+    aggregates: _containers.RepeatedCompositeFieldContainer[_types_pb2.Aggregate]
+    def __init__(self, aggregates: _Optional[_Iterable[_Union[_types_pb2.Aggregate, _Mapping]]] = ...) -> None: ...
+
 class StreamDatapointsRequest(_message.Message):
     __slots__ = ["convert", "datastream_id", "query"]
     CONVERT_FIELD_NUMBER: _ClassVar[int]

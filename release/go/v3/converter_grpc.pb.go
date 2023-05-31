@@ -22,7 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConverterServiceClient interface {
-	ConvertMany(ctx context.Context, in *ConvertManyRequest, opts ...grpc.CallOption) (*ConvertManyResponse, error)
+	ConvertAggregates(ctx context.Context, in *ConvertAggregatesRequest, opts ...grpc.CallOption) (*ConvertAggregatesResponse, error)
+	ConvertDatapoints(ctx context.Context, in *ConvertDatapointsRequest, opts ...grpc.CallOption) (*ConvertDatapointsResponse, error)
 }
 
 type converterServiceClient struct {
@@ -33,9 +34,18 @@ func NewConverterServiceClient(cc grpc.ClientConnInterface) ConverterServiceClie
 	return &converterServiceClient{cc}
 }
 
-func (c *converterServiceClient) ConvertMany(ctx context.Context, in *ConvertManyRequest, opts ...grpc.CallOption) (*ConvertManyResponse, error) {
-	out := new(ConvertManyResponse)
-	err := c.cc.Invoke(ctx, "/v3.ConverterService/ConvertMany", in, out, opts...)
+func (c *converterServiceClient) ConvertAggregates(ctx context.Context, in *ConvertAggregatesRequest, opts ...grpc.CallOption) (*ConvertAggregatesResponse, error) {
+	out := new(ConvertAggregatesResponse)
+	err := c.cc.Invoke(ctx, "/v3.ConverterService/ConvertAggregates", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *converterServiceClient) ConvertDatapoints(ctx context.Context, in *ConvertDatapointsRequest, opts ...grpc.CallOption) (*ConvertDatapointsResponse, error) {
+	out := new(ConvertDatapointsResponse)
+	err := c.cc.Invoke(ctx, "/v3.ConverterService/ConvertDatapoints", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +56,8 @@ func (c *converterServiceClient) ConvertMany(ctx context.Context, in *ConvertMan
 // All implementations must embed UnimplementedConverterServiceServer
 // for forward compatibility
 type ConverterServiceServer interface {
-	ConvertMany(context.Context, *ConvertManyRequest) (*ConvertManyResponse, error)
+	ConvertAggregates(context.Context, *ConvertAggregatesRequest) (*ConvertAggregatesResponse, error)
+	ConvertDatapoints(context.Context, *ConvertDatapointsRequest) (*ConvertDatapointsResponse, error)
 	mustEmbedUnimplementedConverterServiceServer()
 }
 
@@ -54,8 +65,11 @@ type ConverterServiceServer interface {
 type UnimplementedConverterServiceServer struct {
 }
 
-func (UnimplementedConverterServiceServer) ConvertMany(context.Context, *ConvertManyRequest) (*ConvertManyResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ConvertMany not implemented")
+func (UnimplementedConverterServiceServer) ConvertAggregates(context.Context, *ConvertAggregatesRequest) (*ConvertAggregatesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConvertAggregates not implemented")
+}
+func (UnimplementedConverterServiceServer) ConvertDatapoints(context.Context, *ConvertDatapointsRequest) (*ConvertDatapointsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConvertDatapoints not implemented")
 }
 func (UnimplementedConverterServiceServer) mustEmbedUnimplementedConverterServiceServer() {}
 
@@ -70,20 +84,38 @@ func RegisterConverterServiceServer(s grpc.ServiceRegistrar, srv ConverterServic
 	s.RegisterService(&ConverterService_ServiceDesc, srv)
 }
 
-func _ConverterService_ConvertMany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ConvertManyRequest)
+func _ConverterService_ConvertAggregates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConvertAggregatesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ConverterServiceServer).ConvertMany(ctx, in)
+		return srv.(ConverterServiceServer).ConvertAggregates(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v3.ConverterService/ConvertMany",
+		FullMethod: "/v3.ConverterService/ConvertAggregates",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConverterServiceServer).ConvertMany(ctx, req.(*ConvertManyRequest))
+		return srv.(ConverterServiceServer).ConvertAggregates(ctx, req.(*ConvertAggregatesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ConverterService_ConvertDatapoints_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConvertDatapointsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConverterServiceServer).ConvertDatapoints(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v3.ConverterService/ConvertDatapoints",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConverterServiceServer).ConvertDatapoints(ctx, req.(*ConvertDatapointsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -96,8 +128,12 @@ var ConverterService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ConverterServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ConvertMany",
-			Handler:    _ConverterService_ConvertMany_Handler,
+			MethodName: "ConvertAggregates",
+			Handler:    _ConverterService_ConvertAggregates_Handler,
+		},
+		{
+			MethodName: "ConvertDatapoints",
+			Handler:    _ConverterService_ConvertDatapoints_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -8,8 +8,6 @@ from v3 import converter_pb2 as v3_dot_converter__pb2
 class ConverterServiceStub(object):
     """NOTES:
     rpc ListUnits
-    rpc ConvertOne
-    rpc ConvertStream
     """
 
     def __init__(self, channel):
@@ -18,21 +16,30 @@ class ConverterServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.ConvertMany = channel.unary_unary(
-                '/v3.ConverterService/ConvertMany',
-                request_serializer=v3_dot_converter__pb2.ConvertManyRequest.SerializeToString,
-                response_deserializer=v3_dot_converter__pb2.ConvertManyResponse.FromString,
+        self.ConvertAggregates = channel.unary_unary(
+                '/v3.ConverterService/ConvertAggregates',
+                request_serializer=v3_dot_converter__pb2.ConvertAggregatesRequest.SerializeToString,
+                response_deserializer=v3_dot_converter__pb2.ConvertAggregatesResponse.FromString,
+                )
+        self.ConvertDatapoints = channel.unary_unary(
+                '/v3.ConverterService/ConvertDatapoints',
+                request_serializer=v3_dot_converter__pb2.ConvertDatapointsRequest.SerializeToString,
+                response_deserializer=v3_dot_converter__pb2.ConvertDatapointsResponse.FromString,
                 )
 
 
 class ConverterServiceServicer(object):
     """NOTES:
     rpc ListUnits
-    rpc ConvertOne
-    rpc ConvertStream
     """
 
-    def ConvertMany(self, request, context):
+    def ConvertAggregates(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ConvertDatapoints(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -41,10 +48,15 @@ class ConverterServiceServicer(object):
 
 def add_ConverterServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'ConvertMany': grpc.unary_unary_rpc_method_handler(
-                    servicer.ConvertMany,
-                    request_deserializer=v3_dot_converter__pb2.ConvertManyRequest.FromString,
-                    response_serializer=v3_dot_converter__pb2.ConvertManyResponse.SerializeToString,
+            'ConvertAggregates': grpc.unary_unary_rpc_method_handler(
+                    servicer.ConvertAggregates,
+                    request_deserializer=v3_dot_converter__pb2.ConvertAggregatesRequest.FromString,
+                    response_serializer=v3_dot_converter__pb2.ConvertAggregatesResponse.SerializeToString,
+            ),
+            'ConvertDatapoints': grpc.unary_unary_rpc_method_handler(
+                    servicer.ConvertDatapoints,
+                    request_deserializer=v3_dot_converter__pb2.ConvertDatapointsRequest.FromString,
+                    response_serializer=v3_dot_converter__pb2.ConvertDatapointsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -56,12 +68,10 @@ def add_ConverterServiceServicer_to_server(servicer, server):
 class ConverterService(object):
     """NOTES:
     rpc ListUnits
-    rpc ConvertOne
-    rpc ConvertStream
     """
 
     @staticmethod
-    def ConvertMany(request,
+    def ConvertAggregates(request,
             target,
             options=(),
             channel_credentials=None,
@@ -71,8 +81,25 @@ class ConverterService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/v3.ConverterService/ConvertMany',
-            v3_dot_converter__pb2.ConvertManyRequest.SerializeToString,
-            v3_dot_converter__pb2.ConvertManyResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/v3.ConverterService/ConvertAggregates',
+            v3_dot_converter__pb2.ConvertAggregatesRequest.SerializeToString,
+            v3_dot_converter__pb2.ConvertAggregatesResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ConvertDatapoints(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/v3.ConverterService/ConvertDatapoints',
+            v3_dot_converter__pb2.ConvertDatapointsRequest.SerializeToString,
+            v3_dot_converter__pb2.ConvertDatapointsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

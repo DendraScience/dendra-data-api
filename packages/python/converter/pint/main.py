@@ -35,12 +35,38 @@ def get_unit(key):
 
 
 class ConverterService(converter_pb2_grpc.ConverterServiceServicer):
-    async def ConvertMany(
+    async def ConvertAggregates(
         self,
-        request: converter_pb2.ConvertManyRequest,
+        request: converter_pb2.ConvertAggregatesRequest,
         context: grpc.aio.ServicerContext,
-    ) -> converter_pb2.ConvertManyResponse:
-        logging.info("convert many request received")
+    ) -> converter_pb2.ConvertAggregatesResponse:
+        logging.info("convert aggregates request received")
+
+        from_unit = get_unit(request.convert.from_unit)
+        to_unit = get_unit(request.convert.to_unit)
+        loop = asyncio.get_running_loop()
+
+        def convert(ags, f, t):
+            for ag in ags:
+                ag.uv.minimum = Q_(dp.v.minimum, f).to(t).magnitude
+                ag.uv.maximum = Q_(dp.v.maximum, f).to(t).magnitude
+                ag.uv.summation = Q_(dp.v.summation, f).to(t).magnitude
+            return ags
+
+        # TODO: configure pool
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            aggregates = await loop.run_in_executor(
+                executor, convert, request.aggregates, from_unit, to_unit
+            )
+
+        return converter_pb2.ConvertAggregatesResponse(aggregates=aggregates)
+
+    async def ConvertDatapoints(
+        self,
+        request: converter_pb2.ConvertDatapointsRequest,
+        context: grpc.aio.ServicerContext,
+    ) -> converter_pb2.ConvertDatapointsResponse:
+        logging.info("convert datapoints request received")
 
         from_unit = get_unit(request.convert.from_unit)
         to_unit = get_unit(request.convert.to_unit)
@@ -57,7 +83,7 @@ class ConverterService(converter_pb2_grpc.ConverterServiceServicer):
                 executor, convert, request.datapoints, from_unit, to_unit
             )
 
-        return converter_pb2.ConvertManyResponse(datapoints=datapoints)
+        return converter_pb2.ConvertDatapointsResponse(datapoints=datapoints)
 
 
 # TODO: schedule this to occur periodically

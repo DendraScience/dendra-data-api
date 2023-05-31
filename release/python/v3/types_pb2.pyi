@@ -7,6 +7,30 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class Aggregate(_message.Message):
+    __slots__ = ["count", "q", "ts", "uv", "v"]
+    COUNT_FIELD_NUMBER: _ClassVar[int]
+    Q_FIELD_NUMBER: _ClassVar[int]
+    TS_FIELD_NUMBER: _ClassVar[int]
+    UV_FIELD_NUMBER: _ClassVar[int]
+    V_FIELD_NUMBER: _ClassVar[int]
+    count: int
+    q: DataQuality
+    ts: _timestamp_pb2.Timestamp
+    uv: AggregateValue
+    v: AggregateValue
+    def __init__(self, ts: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., count: _Optional[int] = ..., v: _Optional[_Union[AggregateValue, _Mapping]] = ..., uv: _Optional[_Union[AggregateValue, _Mapping]] = ..., q: _Optional[_Union[DataQuality, _Mapping]] = ...) -> None: ...
+
+class AggregateValue(_message.Message):
+    __slots__ = ["maximum", "minimum", "summation"]
+    MAXIMUM_FIELD_NUMBER: _ClassVar[int]
+    MINIMUM_FIELD_NUMBER: _ClassVar[int]
+    SUMMATION_FIELD_NUMBER: _ClassVar[int]
+    maximum: float
+    minimum: float
+    summation: float
+    def __init__(self, minimum: _Optional[float] = ..., maximum: _Optional[float] = ..., summation: _Optional[float] = ...) -> None: ...
+
 class AnnotationActions(_message.Message):
     __slots__ = ["attrib", "evaluate", "exclude", "flag"]
     ATTRIB_FIELD_NUMBER: _ClassVar[int]
@@ -28,6 +52,16 @@ class ConvertArgs(_message.Message):
     library: str
     to_unit: str
     def __init__(self, from_unit: _Optional[str] = ..., to_unit: _Optional[str] = ..., library: _Optional[str] = ...) -> None: ...
+
+class DataQuality(_message.Message):
+    __slots__ = ["annotation_ids", "attrib", "flag"]
+    ANNOTATION_IDS_FIELD_NUMBER: _ClassVar[int]
+    ATTRIB_FIELD_NUMBER: _ClassVar[int]
+    FLAG_FIELD_NUMBER: _ClassVar[int]
+    annotation_ids: _containers.RepeatedScalarFieldContainer[str]
+    attrib: _struct_pb2.Struct
+    flag: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, attrib: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., flag: _Optional[_Iterable[str]] = ..., annotation_ids: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class Datapoint(_message.Message):
     __slots__ = ["d", "da", "et", "g", "gc", "lt", "o", "q", "t", "ti", "uv", "v", "va"]
@@ -51,23 +85,13 @@ class Datapoint(_message.Message):
     gc: _containers.RepeatedScalarFieldContainer[float]
     lt: _timestamp_pb2.Timestamp
     o: int
-    q: DatapointQuality
+    q: DataQuality
     t: _timestamp_pb2.Timestamp
     ti: _struct_pb2.Struct
     uv: float
     v: float
     va: _containers.RepeatedScalarFieldContainer[float]
-    def __init__(self, t: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., o: _Optional[int] = ..., lt: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., d: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., da: _Optional[_Iterable[_Union[_struct_pb2.Struct, _Mapping]]] = ..., v: _Optional[float] = ..., va: _Optional[_Iterable[float]] = ..., uv: _Optional[float] = ..., g: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., gc: _Optional[_Iterable[float]] = ..., q: _Optional[_Union[DatapointQuality, _Mapping]] = ..., ti: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., et: _Optional[_Union[EndTime, _Mapping]] = ...) -> None: ...
-
-class DatapointQuality(_message.Message):
-    __slots__ = ["annotation_ids", "attrib", "flag"]
-    ANNOTATION_IDS_FIELD_NUMBER: _ClassVar[int]
-    ATTRIB_FIELD_NUMBER: _ClassVar[int]
-    FLAG_FIELD_NUMBER: _ClassVar[int]
-    annotation_ids: _containers.RepeatedScalarFieldContainer[str]
-    attrib: _struct_pb2.Struct
-    flag: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, attrib: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., flag: _Optional[_Iterable[str]] = ..., annotation_ids: _Optional[_Iterable[str]] = ...) -> None: ...
+    def __init__(self, t: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., o: _Optional[int] = ..., lt: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., d: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., da: _Optional[_Iterable[_Union[_struct_pb2.Struct, _Mapping]]] = ..., v: _Optional[float] = ..., va: _Optional[_Iterable[float]] = ..., uv: _Optional[float] = ..., g: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., gc: _Optional[_Iterable[float]] = ..., q: _Optional[_Union[DataQuality, _Mapping]] = ..., ti: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ..., et: _Optional[_Union[EndTime, _Mapping]] = ...) -> None: ...
 
 class DatapointsConfigInstance(_message.Message):
     __slots__ = ["actions", "annotation_ids", "begins_at", "connection", "ends_before", "params", "path", "ref"]

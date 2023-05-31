@@ -29,7 +29,7 @@ func NewDriver() *Driver {
 
 	datapointsBatchSize, err := strconv.Atoi(os.Getenv("INFLUXQL_DATAPOINTS_BATCH_SIZE"))
 	if err != nil || datapointsBatchSize <= 0 {
-		datapointsBatchSize = 10
+		datapointsBatchSize = 24
 	}
 	driver := Driver{
 		datapointsBatchSize: datapointsBatchSize,

@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"sort"
 	"time"
 
@@ -79,6 +80,43 @@ func (self Interval) Intersect(other Interval) Interval {
 func (self Interval) IsEmpty() bool {
 	return self.End.Before(self.Start) ||
 		(self.End.Equal(self.Start) && (self.LeftOpen || self.RightOpen))
+}
+
+func BucketTsFn(width string) (func(time.Time, time.Time) time.Time, error) {
+	if width == "" {
+		return func(ts time.Time, currTs time.Time) time.Time {
+			if currTs.IsZero() {
+				return ts
+			}
+			return currTs
+		}, nil
+	}
+
+	// fixed calendar durations
+	if width == "1y" {
+		return func(ts time.Time, _ time.Time) time.Time {
+			return time.Date(ts.Year(), 1, 1, 0, 0, 0, 0, time.UTC)
+		}, nil
+	}
+	if width == "1mo" {
+		return func(ts time.Time, _ time.Time) time.Time {
+			return time.Date(ts.Year(), ts.Month(), 1, 0, 0, 0, 0, time.UTC)
+		}, nil
+	}
+	if width == "1d" {
+		return func(ts time.Time, _ time.Time) time.Time {
+			return time.Date(ts.Year(), ts.Month(), ts.Day(), 0, 0, 0, 0, time.UTC)
+		}, nil
+	}
+
+	// fallback to time durations
+	duration, err := time.ParseDuration(width)
+	if err != nil {
+		return nil, fmt.Errorf("parse bucket width error: %w", err)
+	}
+	return func(ts time.Time, _ time.Time) time.Time {
+		return ts.Truncate(duration)
+	}, nil
 }
 
 func MergeConfig(datastream *pb.Datastream, reverse bool) []*pb.DatapointsConfigInstance {

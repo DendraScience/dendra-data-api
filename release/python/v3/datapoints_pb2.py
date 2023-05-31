@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from v3 import types_pb2 as v3_dot_types__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13v3/datapoints.proto\x12\x02v3\x1a\x0ev3/types.proto\"v\n\x17StreamDatapointsRequest\x12\x15\n\rdatastream_id\x18\x01 \x01(\t\x12\"\n\x05query\x18\x02 \x01(\x0b\x32\x13.v3.DatapointsQuery\x12 \n\x07\x63onvert\x18\x03 \x01(\x0b\x32\x0f.v3.ConvertArgs\"=\n\x18StreamDatapointsResponse\x12!\n\ndatapoints\x18\x01 \x03(\x0b\x32\r.v3.Datapoint2f\n\x11\x44\x61tapointsService\x12Q\n\x10StreamDatapoints\x12\x1b.v3.StreamDatapointsRequest\x1a\x1c.v3.StreamDatapointsResponse\"\x00\x30\x01\x42\x38Z6github.com/dendrascience/dendra-data-api/release/go/v3b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13v3/datapoints.proto\x12\x02v3\x1a\x0ev3/types.proto\"\xa0\x01\n\x17StreamAggregatesRequest\x12\x15\n\rdatastream_id\x18\x01 \x01(\t\x12\"\n\x05query\x18\x02 \x01(\x0b\x32\x13.v3.DatapointsQuery\x12 \n\x07\x63onvert\x18\x03 \x01(\x0b\x32\x0f.v3.ConvertArgs\x12\x14\n\x0c\x62ucket_width\x18\x04 \x01(\t\x12\x12\n\ncount_only\x18\x05 \x01(\x08\"=\n\x18StreamAggregatesResponse\x12!\n\naggregates\x18\x01 \x03(\x0b\x32\r.v3.Aggregate\"v\n\x17StreamDatapointsRequest\x12\x15\n\rdatastream_id\x18\x01 \x01(\t\x12\"\n\x05query\x18\x02 \x01(\x0b\x32\x13.v3.DatapointsQuery\x12 \n\x07\x63onvert\x18\x03 \x01(\x0b\x32\x0f.v3.ConvertArgs\"=\n\x18StreamDatapointsResponse\x12!\n\ndatapoints\x18\x01 \x03(\x0b\x32\r.v3.Datapoint2\xb9\x01\n\x11\x44\x61tapointsService\x12Q\n\x10StreamAggregates\x12\x1b.v3.StreamAggregatesRequest\x1a\x1c.v3.StreamAggregatesResponse\"\x00\x30\x01\x12Q\n\x10StreamDatapoints\x12\x1b.v3.StreamDatapointsRequest\x1a\x1c.v3.StreamDatapointsResponse\"\x00\x30\x01\x42\x38Z6github.com/dendrascience/dendra-data-api/release/go/v3b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'v3.datapoints_pb2', globals())
@@ -22,10 +22,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z6github.com/dendrascience/dendra-data-api/release/go/v3'
-  _STREAMDATAPOINTSREQUEST._serialized_start=43
-  _STREAMDATAPOINTSREQUEST._serialized_end=161
-  _STREAMDATAPOINTSRESPONSE._serialized_start=163
-  _STREAMDATAPOINTSRESPONSE._serialized_end=224
-  _DATAPOINTSSERVICE._serialized_start=226
-  _DATAPOINTSSERVICE._serialized_end=328
+  _STREAMAGGREGATESREQUEST._serialized_start=44
+  _STREAMAGGREGATESREQUEST._serialized_end=204
+  _STREAMAGGREGATESRESPONSE._serialized_start=206
+  _STREAMAGGREGATESRESPONSE._serialized_end=267
+  _STREAMDATAPOINTSREQUEST._serialized_start=269
+  _STREAMDATAPOINTSREQUEST._serialized_end=387
+  _STREAMDATAPOINTSRESPONSE._serialized_start=389
+  _STREAMDATAPOINTSRESPONSE._serialized_end=450
+  _DATAPOINTSSERVICE._serialized_start=453
+  _DATAPOINTSSERVICE._serialized_end=638
 # @@protoc_insertion_point(module_scope)

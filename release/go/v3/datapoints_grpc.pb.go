@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DatapointsServiceClient interface {
+	StreamAggregates(ctx context.Context, in *StreamAggregatesRequest, opts ...grpc.CallOption) (DatapointsService_StreamAggregatesClient, error)
 	StreamDatapoints(ctx context.Context, in *StreamDatapointsRequest, opts ...grpc.CallOption) (DatapointsService_StreamDatapointsClient, error)
 }
 
@@ -33,8 +34,40 @@ func NewDatapointsServiceClient(cc grpc.ClientConnInterface) DatapointsServiceCl
 	return &datapointsServiceClient{cc}
 }
 
+func (c *datapointsServiceClient) StreamAggregates(ctx context.Context, in *StreamAggregatesRequest, opts ...grpc.CallOption) (DatapointsService_StreamAggregatesClient, error) {
+	stream, err := c.cc.NewStream(ctx, &DatapointsService_ServiceDesc.Streams[0], "/v3.DatapointsService/StreamAggregates", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &datapointsServiceStreamAggregatesClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type DatapointsService_StreamAggregatesClient interface {
+	Recv() (*StreamAggregatesResponse, error)
+	grpc.ClientStream
+}
+
+type datapointsServiceStreamAggregatesClient struct {
+	grpc.ClientStream
+}
+
+func (x *datapointsServiceStreamAggregatesClient) Recv() (*StreamAggregatesResponse, error) {
+	m := new(StreamAggregatesResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *datapointsServiceClient) StreamDatapoints(ctx context.Context, in *StreamDatapointsRequest, opts ...grpc.CallOption) (DatapointsService_StreamDatapointsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &DatapointsService_ServiceDesc.Streams[0], "/v3.DatapointsService/StreamDatapoints", opts...)
+	stream, err := c.cc.NewStream(ctx, &DatapointsService_ServiceDesc.Streams[1], "/v3.DatapointsService/StreamDatapoints", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -69,6 +102,7 @@ func (x *datapointsServiceStreamDatapointsClient) Recv() (*StreamDatapointsRespo
 // All implementations must embed UnimplementedDatapointsServiceServer
 // for forward compatibility
 type DatapointsServiceServer interface {
+	StreamAggregates(*StreamAggregatesRequest, DatapointsService_StreamAggregatesServer) error
 	StreamDatapoints(*StreamDatapointsRequest, DatapointsService_StreamDatapointsServer) error
 	mustEmbedUnimplementedDatapointsServiceServer()
 }
@@ -77,6 +111,9 @@ type DatapointsServiceServer interface {
 type UnimplementedDatapointsServiceServer struct {
 }
 
+func (UnimplementedDatapointsServiceServer) StreamAggregates(*StreamAggregatesRequest, DatapointsService_StreamAggregatesServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamAggregates not implemented")
+}
 func (UnimplementedDatapointsServiceServer) StreamDatapoints(*StreamDatapointsRequest, DatapointsService_StreamDatapointsServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamDatapoints not implemented")
 }
@@ -91,6 +128,27 @@ type UnsafeDatapointsServiceServer interface {
 
 func RegisterDatapointsServiceServer(s grpc.ServiceRegistrar, srv DatapointsServiceServer) {
 	s.RegisterService(&DatapointsService_ServiceDesc, srv)
+}
+
+func _DatapointsService_StreamAggregates_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(StreamAggregatesRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(DatapointsServiceServer).StreamAggregates(m, &datapointsServiceStreamAggregatesServer{stream})
+}
+
+type DatapointsService_StreamAggregatesServer interface {
+	Send(*StreamAggregatesResponse) error
+	grpc.ServerStream
+}
+
+type datapointsServiceStreamAggregatesServer struct {
+	grpc.ServerStream
+}
+
+func (x *datapointsServiceStreamAggregatesServer) Send(m *StreamAggregatesResponse) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 func _DatapointsService_StreamDatapoints_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -122,6 +180,11 @@ var DatapointsService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*DatapointsServiceServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "StreamAggregates",
+			Handler:       _DatapointsService_StreamAggregates_Handler,
+			ServerStreams: true,
+		},
 		{
 			StreamName:    "StreamDatapoints",
 			Handler:       _DatapointsService_StreamDatapoints_Handler,

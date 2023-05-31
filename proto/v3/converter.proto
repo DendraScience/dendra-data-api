@@ -9,17 +9,25 @@ import "v3/types.proto";
 service ConverterService {
   // NOTES:
   // rpc ListUnits
-  // rpc ConvertOne
-  // rpc ConvertStream
 
-  rpc ConvertMany (ConvertManyRequest) returns (ConvertManyResponse) {}
+  rpc ConvertAggregates (ConvertAggregatesRequest) returns (ConvertAggregatesResponse) {}
+  rpc ConvertDatapoints (ConvertDatapointsRequest) returns (ConvertDatapointsResponse) {}
 }
 
-message ConvertManyRequest {
+message ConvertAggregatesRequest {
+  ConvertArgs convert = 1;
+  repeated Aggregate aggregates = 2;
+}
+
+message ConvertAggregatesResponse {
+  repeated Aggregate aggregates = 1;
+}
+
+message ConvertDatapointsRequest {
   ConvertArgs convert = 1;
   repeated Datapoint datapoints = 2;
 }
 
-message ConvertManyResponse {
+message ConvertDatapointsResponse {
   repeated Datapoint datapoints = 1;
 }

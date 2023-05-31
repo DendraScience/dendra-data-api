@@ -7,6 +7,50 @@ option go_package = "github.com/dendrascience/dendra-data-api/release/go/v3";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
 
+
+message AggregateValue {
+  double minimum = 1;
+  double maximum = 2;
+  double summation = 3;
+}
+
+// An individual time series aggregation in a datastream
+message Aggregate {
+  // The aggregate's timestamp in agnostic local time or UTC
+  google.protobuf.Timestamp ts = 1;
+
+  // RESERVED 2
+
+  uint32 count = 3;
+
+  // RESERVED 4
+  // RESERVED 5
+
+  // A scalar value set
+  optional AggregateValue v = 6;
+
+  // RESERVED 7
+
+  // The scalar value set converted to a unit of measure
+  optional AggregateValue uv = 8;
+
+  // RESERVED 9
+  // RESERVED 10
+  // RESERVED 11
+
+  // Data quality information
+  DataQuality q = 12;
+}
+
+// enum BucketWidth {
+//   BUCKET_WIDTH_UNSPECIFIED = 0;
+//   BUCKET_WIDTH_YEAR = 1;
+//   BUCKET_WIDTH_MONTH = 2;
+//   BUCKET_WIDTH_DAY = 3;
+//   BUCKET_WIDTH_HOUR = 4;
+//   BUCKET_WIDTH_30_MINUTE = 5;
+// }
+
 message AnnotationActions {
   google.protobuf.Struct attrib = 1;
   string evaluate = 2;
@@ -56,7 +100,7 @@ message Datapoint {
   repeated double gc = 11;
 
   // Data quality information
-  DatapointQuality q = 12;
+  DataQuality q = 12;
 
   // RESERVED 13
   // RESERVED 14
@@ -69,7 +113,7 @@ message Datapoint {
   EndTime et = 17;
 }
 
-message DatapointQuality {
+message DataQuality {
   google.protobuf.Struct attrib = 1;
   repeated string flag = 2;
   repeated string annotation_ids = 3;

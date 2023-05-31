@@ -5,6 +5,28 @@ var grpc = require('@grpc/grpc-js');
 var v3_datapoints_pb = require('../v3/datapoints_pb.js');
 var v3_types_pb = require('../v3/types_pb.js');
 
+function serialize_v3_StreamAggregatesRequest(arg) {
+  if (!(arg instanceof v3_datapoints_pb.StreamAggregatesRequest)) {
+    throw new Error('Expected argument of type v3.StreamAggregatesRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_v3_StreamAggregatesRequest(buffer_arg) {
+  return v3_datapoints_pb.StreamAggregatesRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_v3_StreamAggregatesResponse(arg) {
+  if (!(arg instanceof v3_datapoints_pb.StreamAggregatesResponse)) {
+    throw new Error('Expected argument of type v3.StreamAggregatesResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_v3_StreamAggregatesResponse(buffer_arg) {
+  return v3_datapoints_pb.StreamAggregatesResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_v3_StreamDatapointsRequest(arg) {
   if (!(arg instanceof v3_datapoints_pb.StreamDatapointsRequest)) {
     throw new Error('Expected argument of type v3.StreamDatapointsRequest');
@@ -29,6 +51,17 @@ function deserialize_v3_StreamDatapointsResponse(buffer_arg) {
 
 
 var DatapointsServiceService = exports.DatapointsServiceService = {
+  streamAggregates: {
+    path: '/v3.DatapointsService/StreamAggregates',
+    requestStream: false,
+    responseStream: true,
+    requestType: v3_datapoints_pb.StreamAggregatesRequest,
+    responseType: v3_datapoints_pb.StreamAggregatesResponse,
+    requestSerialize: serialize_v3_StreamAggregatesRequest,
+    requestDeserialize: deserialize_v3_StreamAggregatesRequest,
+    responseSerialize: serialize_v3_StreamAggregatesResponse,
+    responseDeserialize: deserialize_v3_StreamAggregatesResponse,
+  },
   streamDatapoints: {
     path: '/v3.DatapointsService/StreamDatapoints',
     requestStream: false,
@@ -43,8 +76,3 @@ var DatapointsServiceService = exports.DatapointsServiceService = {
 };
 
 exports.DatapointsServiceClient = grpc.makeGenericClientConstructor(DatapointsServiceService);
-// NOTES:
-// ListAggregates (range, only count, sum, min and max)
-// GetDatapoint (range | sort)
-// StreamAggregates (range | sort | interval | only count, max, min, sum)
-// StreamDatapoints (range | sort | limit)
