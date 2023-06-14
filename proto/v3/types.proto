@@ -7,7 +7,6 @@ option go_package = "github.com/dendrascience/dendra-data-api/release/go/v3";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
 
-
 message AggregateValue {
   double minimum = 1;
   double maximum = 2;

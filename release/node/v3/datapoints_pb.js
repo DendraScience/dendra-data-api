@@ -21,6 +21,10 @@ var global = (function() {
   return Function('return this')();
 }.call(null));
 
+var google_api_annotations_pb = require('../google/api/annotations_pb.js');
+goog.object.extend(proto, google_api_annotations_pb);
+var protoc$gen$openapiv2_options_annotations_pb = require('../protoc-gen-openapiv2/options/annotations_pb.js');
+goog.object.extend(proto, protoc$gen$openapiv2_options_annotations_pb);
 var v3_types_pb = require('../v3/types_pb.js');
 goog.object.extend(proto, v3_types_pb);
 goog.exportSymbol('proto.v3.StreamAggregatesRequest', null, global);

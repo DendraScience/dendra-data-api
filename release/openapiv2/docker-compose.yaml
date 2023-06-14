@@ -1,0 +1,13 @@
+version: '3'
+services:
+  swagger-ui:
+    ports:
+      - 8080:8080
+    image: swaggerapi/swagger-ui
+    restart: always
+    volumes:
+      - ./v3:/usr/share/nginx/html/api
+    environment:
+      # SEE https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/
+      TRY_IT_OUT_ENABLED: true
+      URLS: "[{ url: \"./api/datapoints.swagger.json\", name: \"DatapointsService\" }]"

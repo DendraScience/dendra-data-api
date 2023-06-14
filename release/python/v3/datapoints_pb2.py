@@ -11,25 +11,29 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
+from protoc_gen_openapiv2.options import annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2
 from v3 import types_pb2 as v3_dot_types__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13v3/datapoints.proto\x12\x02v3\x1a\x0ev3/types.proto\"\xa0\x01\n\x17StreamAggregatesRequest\x12\x15\n\rdatastream_id\x18\x01 \x01(\t\x12\"\n\x05query\x18\x02 \x01(\x0b\x32\x13.v3.DatapointsQuery\x12 \n\x07\x63onvert\x18\x03 \x01(\x0b\x32\x0f.v3.ConvertArgs\x12\x14\n\x0c\x62ucket_width\x18\x04 \x01(\t\x12\x12\n\ncount_only\x18\x05 \x01(\x08\"=\n\x18StreamAggregatesResponse\x12!\n\naggregates\x18\x01 \x03(\x0b\x32\r.v3.Aggregate\"v\n\x17StreamDatapointsRequest\x12\x15\n\rdatastream_id\x18\x01 \x01(\t\x12\"\n\x05query\x18\x02 \x01(\x0b\x32\x13.v3.DatapointsQuery\x12 \n\x07\x63onvert\x18\x03 \x01(\x0b\x32\x0f.v3.ConvertArgs\"=\n\x18StreamDatapointsResponse\x12!\n\ndatapoints\x18\x01 \x03(\x0b\x32\r.v3.Datapoint2\xb9\x01\n\x11\x44\x61tapointsService\x12Q\n\x10StreamAggregates\x12\x1b.v3.StreamAggregatesRequest\x1a\x1c.v3.StreamAggregatesResponse\"\x00\x30\x01\x12Q\n\x10StreamDatapoints\x12\x1b.v3.StreamDatapointsRequest\x1a\x1c.v3.StreamDatapointsResponse\"\x00\x30\x01\x42\x38Z6github.com/dendrascience/dendra-data-api/release/go/v3b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13v3/datapoints.proto\x12\x02v3\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x0ev3/types.proto\"\xa0\x01\n\x17StreamAggregatesRequest\x12\x15\n\rdatastream_id\x18\x01 \x01(\t\x12\"\n\x05query\x18\x02 \x01(\x0b\x32\x13.v3.DatapointsQuery\x12 \n\x07\x63onvert\x18\x03 \x01(\x0b\x32\x0f.v3.ConvertArgs\x12\x14\n\x0c\x62ucket_width\x18\x04 \x01(\t\x12\x12\n\ncount_only\x18\x05 \x01(\x08\"=\n\x18StreamAggregatesResponse\x12!\n\naggregates\x18\x01 \x03(\x0b\x32\r.v3.Aggregate\"v\n\x17StreamDatapointsRequest\x12\x15\n\rdatastream_id\x18\x01 \x01(\t\x12\"\n\x05query\x18\x02 \x01(\x0b\x32\x13.v3.DatapointsQuery\x12 \n\x07\x63onvert\x18\x03 \x01(\x0b\x32\x0f.v3.ConvertArgs\"=\n\x18StreamDatapointsResponse\x12!\n\ndatapoints\x18\x01 \x03(\x0b\x32\r.v3.Datapoint2\xcf\x01\n\x11\x44\x61tapointsService\x12Q\n\x10StreamAggregates\x12\x1b.v3.StreamAggregatesRequest\x1a\x1c.v3.StreamAggregatesResponse\"\x00\x30\x01\x12g\n\x10StreamDatapoints\x12\x1b.v3.StreamDatapointsRequest\x1a\x1c.v3.StreamDatapointsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/v3/datapoints0\x01\x42\x90\x02Z6github.com/dendrascience/dendra-data-api/release/go/v3\x92\x41\xd4\x01\x12\x94\x01\n\x15\x44\x65ndra Datapoints API\"8\x12\x1chttps://dendra.science/about\x1a\x18metahuman@dendra.science*<\n\x0c\x42SD-3-Clause\x12,https://opensource.org/licenses/BSD-3-Clause2\x03\x33.0\x1a\x0elocalhost:8051*\x03\x01\x02\x04\x32\x10\x61pplication/json:\x14\x61pplication/x-ndjsonb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'v3.datapoints_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z6github.com/dendrascience/dendra-data-api/release/go/v3'
-  _STREAMAGGREGATESREQUEST._serialized_start=44
-  _STREAMAGGREGATESREQUEST._serialized_end=204
-  _STREAMAGGREGATESRESPONSE._serialized_start=206
-  _STREAMAGGREGATESRESPONSE._serialized_end=267
-  _STREAMDATAPOINTSREQUEST._serialized_start=269
-  _STREAMDATAPOINTSREQUEST._serialized_end=387
-  _STREAMDATAPOINTSRESPONSE._serialized_start=389
-  _STREAMDATAPOINTSRESPONSE._serialized_end=450
-  _DATAPOINTSSERVICE._serialized_start=453
-  _DATAPOINTSSERVICE._serialized_end=638
+  DESCRIPTOR._serialized_options = b'Z6github.com/dendrascience/dendra-data-api/release/go/v3\222A\324\001\022\224\001\n\025Dendra Datapoints API\"8\022\034https://dendra.science/about\032\030metahuman@dendra.science*<\n\014BSD-3-Clause\022,https://opensource.org/licenses/BSD-3-Clause2\0033.0\032\016localhost:8051*\003\001\002\0042\020application/json:\024application/x-ndjson'
+  _DATAPOINTSSERVICE.methods_by_name['StreamDatapoints']._options = None
+  _DATAPOINTSSERVICE.methods_by_name['StreamDatapoints']._serialized_options = b'\202\323\344\223\002\020\022\016/v3/datapoints'
+  _STREAMAGGREGATESREQUEST._serialized_start=122
+  _STREAMAGGREGATESREQUEST._serialized_end=282
+  _STREAMAGGREGATESRESPONSE._serialized_start=284
+  _STREAMAGGREGATESRESPONSE._serialized_end=345
+  _STREAMDATAPOINTSREQUEST._serialized_start=347
+  _STREAMDATAPOINTSREQUEST._serialized_end=465
+  _STREAMDATAPOINTSRESPONSE._serialized_start=467
+  _STREAMDATAPOINTSRESPONSE._serialized_end=528
+  _DATAPOINTSSERVICE._serialized_start=531
+  _DATAPOINTSSERVICE._serialized_end=738
 # @@protoc_insertion_point(module_scope)

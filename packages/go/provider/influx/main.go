@@ -8,7 +8,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -33,8 +32,6 @@ var (
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
-
-	flag.Parse()
 
 	drivers["/influx/flux"] = flux.NewDriver()
 	drivers["/influx/select"] = influxql.NewDriver()

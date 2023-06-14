@@ -370,6 +370,7 @@ func (s *server) StreamAggregates(request *pb.StreamAggregatesRequest, srv pb.Da
 
 					currTs = bucketTs(ts, currTs)
 
+					// control break
 					if count > 0 && !currTs.Equal(prevTs) {
 						if err := send(false); err != nil {
 							return err

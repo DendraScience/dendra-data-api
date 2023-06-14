@@ -1,0 +1,249 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "v3/converter.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ConverterService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "protobufNullValue": {
+      "type": "string",
+      "enum": [
+        "NULL_VALUE"
+      ],
+      "default": "NULL_VALUE",
+      "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\nThe JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v3Aggregate": {
+      "type": "object",
+      "properties": {
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "title": "The aggregate's timestamp in agnostic local time or UTC"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "v": {
+          "$ref": "#/definitions/v3AggregateValue",
+          "title": "A scalar value set"
+        },
+        "uv": {
+          "$ref": "#/definitions/v3AggregateValue",
+          "title": "The scalar value set converted to a unit of measure"
+        },
+        "q": {
+          "$ref": "#/definitions/v3DataQuality",
+          "title": "Data quality information"
+        }
+      },
+      "title": "An individual time series aggregation in a datastream"
+    },
+    "v3AggregateValue": {
+      "type": "object",
+      "properties": {
+        "minimum": {
+          "type": "number",
+          "format": "double"
+        },
+        "maximum": {
+          "type": "number",
+          "format": "double"
+        },
+        "summation": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v3ConvertAggregatesResponse": {
+      "type": "object",
+      "properties": {
+        "aggregates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v3Aggregate"
+          }
+        }
+      }
+    },
+    "v3ConvertArgs": {
+      "type": "object",
+      "properties": {
+        "from_unit": {
+          "type": "string"
+        },
+        "to_unit": {
+          "type": "string"
+        },
+        "library": {
+          "type": "string"
+        }
+      }
+    },
+    "v3ConvertDatapointsResponse": {
+      "type": "object",
+      "properties": {
+        "datapoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v3Datapoint"
+          }
+        }
+      }
+    },
+    "v3DataQuality": {
+      "type": "object",
+      "properties": {
+        "attrib": {
+          "type": "object"
+        },
+        "flag": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "annotation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v3Datapoint": {
+      "type": "object",
+      "properties": {
+        "t": {
+          "type": "string",
+          "format": "date-time",
+          "title": "The datapoint's timestamp in UTC"
+        },
+        "o": {
+          "type": "integer",
+          "format": "int32",
+          "title": "An offset in seconds between the time zone and UTC"
+        },
+        "lt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "The timestamp in agnostic local time (offset applied)"
+        },
+        "d": {
+          "type": "object",
+          "title": "A custom data object"
+        },
+        "da": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "title": "An array of custom data objects"
+        },
+        "v": {
+          "type": "number",
+          "format": "double",
+          "title": "A scalar value"
+        },
+        "va": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": "An array of scalar values"
+        },
+        "uv": {
+          "type": "number",
+          "format": "double",
+          "title": "The scalar value converted to a unit of measure"
+        },
+        "g": {
+          "type": "object",
+          "title": "A GeoJSON point, polygon or multi-polygon\nTODO: Define message type for this"
+        },
+        "gc": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": "A GeoJSON position (i.e. longitude, latitude, altitude)"
+        },
+        "q": {
+          "$ref": "#/definitions/v3DataQuality",
+          "title": "Data quality information"
+        },
+        "ti": {
+          "type": "object",
+          "title": "Extended information about the time"
+        },
+        "et": {
+          "$ref": "#/definitions/v3EndTime",
+          "title": "An end time object for observations that span a period of time"
+        }
+      },
+      "title": "An individual time series observation in a datastream"
+    },
+    "v3EndTime": {
+      "type": "object",
+      "properties": {
+        "t": {
+          "type": "string",
+          "format": "date-time",
+          "title": "The datapoint's timestamp in UTC"
+        },
+        "o": {
+          "type": "integer",
+          "format": "int32",
+          "title": "An offset in seconds between the time zone and UTC"
+        }
+      },
+      "title": "An end time object for observations that span a period of time"
+    }
+  }
+}

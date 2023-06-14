@@ -3,6 +3,8 @@
 'use strict';
 var grpc = require('@grpc/grpc-js');
 var v3_datapoints_pb = require('../v3/datapoints_pb.js');
+var google_api_annotations_pb = require('../google/api/annotations_pb.js');
+var protoc$gen$openapiv2_options_annotations_pb = require('../protoc-gen-openapiv2/options/annotations_pb.js');
 var v3_types_pb = require('../v3/types_pb.js');
 
 function serialize_v3_StreamAggregatesRequest(arg) {
